@@ -9,9 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  List<CameraDescription> cameras;
+  // List<CameraDescription> cameras;
   // if (Platform.isAndroid || Platform.isIOS) cameras = await availableCameras();
   SharedPreferences.setMockInitialValues({});
   // final firstCamera = cameras.first;
-  runApp(ModularApp(module: AppModule(cameras)));
+  runApp(ModularApp(module: AppModule()));
 }

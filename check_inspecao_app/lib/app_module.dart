@@ -9,6 +9,8 @@ import 'package:check_inspecao_app/pages/itemInspecao/item_inspecao_page.dart';
 import 'package:check_inspecao_app/pages/login/login_controller.dart';
 import 'package:check_inspecao_app/pages/login/login_page.dart';
 import 'package:check_inspecao_app/pages/perfil_usuario/perfil_usuario_page.dart';
+import 'package:check_inspecao_app/pages/usuario/usuario_controller.dart';
+import 'package:check_inspecao_app/pages/usuario/usuario_page.dart';
 import 'package:check_inspecao_app/services/check_inspecao_service.dart';
 import 'package:check_inspecao_app/widgets/camera_preview.dart';
 import 'package:check_inspecao_app/widgets/draw.dart';
@@ -16,8 +18,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AppModule extends MainModule {
-  AppModule(this.cameras);
-  List<CameraDescription> cameras;
+  // AppModule();
+  // List<CameraDescription> cameras;
   @override
   List<Bind> get binds => [
         Bind((inject) => CheckInspecaoService()),
@@ -25,7 +27,8 @@ class AppModule extends MainModule {
         Bind((inject) => GrupoController()),
         Bind((inject) => DocumentosController()),
         Bind((inject) => ItemInspecaoController()),
-        Bind((inject) => this.cameras?.first),
+        Bind((inject) => UsuarioController()),
+        // Bind((inject) => this.cameras?.first),
         // Bind<AdMob>(
         //     (inject) => Platform.isAndroid ? AdMobAndroid() : AdMobiOS())
       ];
@@ -55,6 +58,8 @@ class AppModule extends MainModule {
           return DisplayPictureScreen(imagePath: args?.data);
         }),
         ModularRouter('/Assinatura', child: (_, args) => Draw()),
+        ModularRouter('/CadUsuario', child: (_, args) => UsuarioPage()),
+
         // ModularRouter('/', child: (_, args) {
         //   var config = Modular.get<AppConfig>();
         //   return MyHomePage(title: 'SmartFipe', config: config);

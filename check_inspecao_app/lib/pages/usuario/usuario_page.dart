@@ -1,10 +1,15 @@
+import 'dart:typed_data';
+
+import 'package:check_inspecao_app/models/empresa_model.dart';
+import 'package:check_inspecao_app/models/login_model.dart';
 import 'package:check_inspecao_app/models/usuario_model.dart';
 import 'package:check_inspecao_app/pages/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class PerfilUsuarioPage extends StatefulWidget {
+class UsuarioPage extends StatefulWidget {
   final _controller = Modular.get<UsuarioController>();
   final _ctrlCnpj = TextEditingController();
   final _ctrlNome = TextEditingController();
@@ -12,19 +17,67 @@ class PerfilUsuarioPage extends StatefulWidget {
   final _ctrlSenha = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isBusy = false;
-
   @override
-  _PerfilUsuarioPageState createState() => _PerfilUsuarioPageState();
+  _UsuarioPageState createState() => _UsuarioPageState();
 }
 
-class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
+class _UsuarioPageState extends State<UsuarioPage> {
   @override
   Widget build(BuildContext context) {
-    var _controller = Modular.get<UsuarioController>();
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil de Usuário'),
+        title: Text('Criar Usuário'),
+        actions: [
+          IconButton(
+            icon: widget._isBusy
+                ? CircularProgressIndicator(
+                    backgroundColor: Colors.amber,
+                    strokeWidth: 1.0,
+                  )
+                : Icon(Icons.save),
+            onPressed: widget._isBusy
+                ? null
+                : () async {
+                    // Validate returns true if the form is valid, or false otherwise.
+                    if (widget._formKey.currentState.validate()) {
+                      // If the form is valid, display a snackbar. In the real world,
+                      // you'd often call a server or save the information in a database.
+                      setState(() {
+                        widget._isBusy = true;
+                      });
+                      UsuarioModel usuarioModel;
+                      if (widget._controller.usuario != null) {
+                        usuarioModel = widget._controller.usuario;
+                      } else {
+                        usuarioModel = UsuarioModel();
+                      }
+                      usuarioModel.empresa =
+                          EmpresaModel(cnpj: widget._ctrlCnpj.text);
+                      usuarioModel.login = LoginModel(
+                          usuariologin: widget._ctrlLogin.text,
+                          senha: widget._ctrlSenha.text);
+                      usuarioModel.nome = widget._ctrlNome.text;
+                      widget._controller.setUsuario(usuarioModel);
+                      try {
+                        if (await widget._controller.salvarUsuario()) {
+                          setState(() {
+                            widget._isBusy = false;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Salvo Com Sucesso!')));
+                          Modular.to.pop();
+                        }
+                      } catch (e) {
+                        setState(() {
+                          widget._isBusy = false;
+                        });
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(e.message)));
+                      }
+                    }
+                  },
+          )
+        ],
       ),
       body: Padding(
           padding: const EdgeInsets.all(8.0),

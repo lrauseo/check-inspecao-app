@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_editor/image_editor.dart';
 
 class TakePictureScreen extends StatefulWidget {
-  final camera = Modular.get<CameraDescription>();
+  // final camera = Modular.get<CameraDescription>();
   @override
   _TakePictureScreenState createState() => _TakePictureScreenState();
 }
@@ -24,14 +24,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     super.initState();
     // To display the current output from the camera,
     // create a CameraController.
-    _controllerCamera = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controllerCamera.initialize();
+    // _controllerCamera = CameraController(
+    //   // Get a specific camera from the list of available cameras.
+    //   widget.camera,
+    //   // Define the resolution to use.
+    //   ResolutionPreset.medium,
+    // );
+    // // Next, initialize the controller. This returns a Future.
+    // _initializeControllerFuture = _controllerCamera.initialize();
 
     turns = 0;
   }
@@ -109,8 +109,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
             final image = await _controllerCamera.takePicture();
 
             Uint8List data = await image.readAsBytes();
-            var imagem =
-                await Modular.to.pushNamed('/MostrarImagem', arguments: data);
+            var imagem = await Modular.to
+                .pushNamed<Uint8List>('/MostrarImagem', arguments: data);
             if (imagem != null) Modular.to.pop<Uint8List>(imagem);
           } catch (e) {
             // If an error occurs, log the error to the console.

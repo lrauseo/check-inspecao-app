@@ -1,6 +1,7 @@
 import 'package:check_inspecao_app/constantes.dart';
 import 'package:check_inspecao_app/custom_exceptions/login_exception.dart';
 import 'package:check_inspecao_app/models/usuario_auth_model.dart';
+import 'package:check_inspecao_app/pages/usuario/usuario_controller.dart';
 import 'package:check_inspecao_app/services/check_inspecao_service.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -11,6 +12,7 @@ class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store {
   final service = Modular.get<CheckInspecaoService>();
+  final _usuarioController = Modular.get<UsuarioController>();
 
   @action
   Future<bool> validarLogin(String usuario, String senha) async {
@@ -20,6 +22,7 @@ abstract class _LoginControllerBase with Store {
         var prefs = await SharedPreferences.getInstance();
         prefs.setString(ConstsSharedPreferences.usuarioAuth,
             usuarioAuth.toJson().toString());
+        _usuarioController.setUsuario(usuarioAuth.usuario);
       }
       return usuarioAuth != null;
     } on LoginException {

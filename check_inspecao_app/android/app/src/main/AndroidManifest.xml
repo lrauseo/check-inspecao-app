@@ -2,7 +2,7 @@
     package="com.example.check_inspecao_app">
    <application
         android:label="check_inspecao_app"
-        android:usesCleartextTraffic="false"
+        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity

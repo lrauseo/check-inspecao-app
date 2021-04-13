@@ -52,7 +52,8 @@ class _DrawState extends State<Draw> {
     final img = await picture.toImage(600, 600);
     final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
     var data = Uint8List.view(pngBytes.buffer);
-    Modular.to.pushNamed('/MostrarImagem', arguments: data);
+    var imagem = await Modular.to.pushNamed('/MostrarImagem', arguments: data);
+    if (imagem != null) Modular.to.pop(imagem);
     // setState(() {
     //   // imgBytes = pngBytes;
     // });

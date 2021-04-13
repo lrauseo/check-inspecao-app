@@ -246,17 +246,6 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                                   onPressed: () async {
                                                     await _tirarFoto(_controller
                                                         .itensDocumento[idx]);
-                                                    // var pathFoto = await Modular
-                                                    //     .to
-                                                    //     .pushNamed(
-                                                    //         '/TirarFoto');
-                                                    // if (pathFoto != null) {
-                                                    //   _controller.addFoto(
-                                                    //       _controller
-                                                    //               .itensDocumento[
-                                                    //           idx],
-                                                    //       pathFoto);
-                                                    // }
                                                   },
                                                   child:
                                                       Icon(Icons.add_a_photo)),
@@ -284,6 +273,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
     //   child: Image.network(
     //       "https://weneedfun.com/wp-content/uploads/2015/10/Sports-car-16.jpg"),
     // ));
+
     item.fotos?.forEach((element) {
       if (element.arquivo == null) item.fotos.remove(element);
     });
@@ -305,8 +295,10 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                             var imagem = await Modular.to.pushNamed(
                                 '/MostrarImagem',
                                 arguments: e.arquivo);
-                            _controller.excluirFoto(item, e);
-                            _controller.addFoto(item, imagem);
+                            if (imagem != null) {
+                              _controller.excluirFoto(item, e);
+                              _controller.addFoto(item, imagem);
+                            }
                           },
                           child: Text('Visualizar')),
                       TextButton(
@@ -337,23 +329,18 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
               children: [
                 ElevatedButton(
                     onPressed: () async {
-                      // Modular.to.pop();
-                      // var pathFoto = await Modular.to.pushNamed('/TirarFoto');
-                      // if (pathFoto != null) {
-                      //   _controller.addFoto(item, pathFoto);
-                      // }
                       Modular.to.pop();
                       PickedFile pickedFile = await ImagePicker().getImage(
                         source: ImageSource.camera,
                         maxWidth: 1800,
                         maxHeight: 1800,
+                        imageQuality: 25,
                       );
                       if (pickedFile != null) {
                         Uint8List data = await pickedFile.readAsBytes();
                         var imagem = await Modular.to
                             .pushNamed('/MostrarImagem', arguments: data);
-
-                        _controller.addFoto(item, imagem);
+                        if (imagem != null) _controller.addFoto(item, imagem);
                       }
                     },
                     child: Text('Tirar Foto')),
@@ -364,6 +351,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                         source: ImageSource.gallery,
                         maxWidth: 1800,
                         maxHeight: 1800,
+                        imageQuality: 25,
                       );
                       if (pickedFile != null) {
                         Uint8List data = await pickedFile.readAsBytes();

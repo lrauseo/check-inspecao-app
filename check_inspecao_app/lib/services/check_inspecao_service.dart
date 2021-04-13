@@ -6,13 +6,14 @@ import 'package:check_inspecao_app/models/documento_model.dart';
 import 'package:check_inspecao_app/models/grupo_model.dart';
 import 'package:check_inspecao_app/models/item_inspecao_model.dart';
 import 'package:check_inspecao_app/models/usuario_auth_model.dart';
+import 'package:check_inspecao_app/models/usuario_model.dart';
 import 'package:http/http.dart' as http;
 
 class CheckInspecaoService {
   final String _autenticarUsuario = "/Usuario/AutenticarUsuario/";
   Future<UsuarioAuthModel> validarLogin(String usuario, String senha) async {
     try {
-      var url = Uri.https(Constantes.baseUrl, _autenticarUsuario,
+      var url = Uri.http(Constantes.baseUrl, _autenticarUsuario,
           {'login': usuario, 'senha': senha});
       var response = await http.post(url
           // , headers: {
@@ -41,7 +42,7 @@ class CheckInspecaoService {
   Future<DocumentoModel> novoDocumento(int usuarioId, int clientId) async {
     final String _novoDocumento = "/Documento/NovoDocumento/";
     try {
-      var url = Uri.https(Constantes.baseUrl, _novoDocumento, {
+      var url = Uri.http(Constantes.baseUrl, _novoDocumento, {
         'usuarioId': usuarioId.toString(),
         'clienteId': clientId.toString()
       });
@@ -62,7 +63,7 @@ class CheckInspecaoService {
   Future<List<GrupoModel>> listaGrupos() async {
     final String _grupo = "/Grupo/";
     try {
-      var url = Uri.https(Constantes.baseUrl, _grupo);
+      var url = Uri.http(Constantes.baseUrl, _grupo);
       var response = await http.get(url);
       if (response.statusCode == 200) {
         Iterable json = jsonDecode(response.body);
@@ -83,7 +84,7 @@ class CheckInspecaoService {
   listaItensInspecao(int grupoId) async {
     final String _itemInspecao = "/Grupo/BuscaItensInspecao/";
     try {
-      var url = Uri.https(
+      var url = Uri.http(
           Constantes.baseUrl, _itemInspecao, {'grupoId': grupoId.toString()});
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -105,7 +106,7 @@ class CheckInspecaoService {
   salvarDocumento(DocumentoModel documentoAtual) async {
     final String _salvarDocumento = "/Documento/SalvarDocumeto/";
     try {
-      var url = Uri.https(Constantes.baseUrl, _salvarDocumento);
+      var url = Uri.http(Constantes.baseUrl, _salvarDocumento);
       // print(documentoAtual.toJson().toString());
       var param = jsonEncode(documentoAtual.toJson(true));
       var response = await http.post(url,
@@ -123,10 +124,31 @@ class CheckInspecaoService {
     }
   }
 
+  salvarUsuario(UsuarioModel usuario) async {
+    final String _salvarUsuario = "/Usuario/SalvarUsuario/";
+    try {
+      var url = Uri.http(Constantes.baseUrl, _salvarUsuario);
+      // print(documentoAtual.toJson().toString());
+      var param = jsonEncode(usuario.toJson());
+      var response = await http.post(url,
+          body: param,
+          headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+      if (response.statusCode == 200) {
+        Map json = jsonDecode(response.body);
+        print("Usuario Salvo...");
+        return UsuarioModel.fromJson(json);
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
   documentoById(int documentoId) async {
     final String _documentoById = "/Documento/GetDocumentoById/";
     try {
-      var url = Uri.https(Constantes.baseUrl, _documentoById,
+      var url = Uri.http(Constantes.baseUrl, _documentoById,
           {'documentoId': documentoId.toString()});
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -144,7 +166,7 @@ class CheckInspecaoService {
   getDocumentos(int usuarioId, int clienteId) async {
     final String _documentos = "/Documento/GetDocumentos/";
     try {
-      var url = Uri.https(Constantes.baseUrl, _documentos, {
+      var url = Uri.http(Constantes.baseUrl, _documentos, {
         'usuarioId': usuarioId.toString(),
         'clienteId': clienteId.toString()
       });

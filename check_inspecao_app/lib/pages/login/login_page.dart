@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:check_inspecao_app/pages/login/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,10 +31,20 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Expanded(
+      body: Container(
+        // padding: EdgeInsets.fromLTRB(1, 1, 1, 1),
+        // decoration: BoxDecoration(
+        //   image: DecorationImage(
+        //     // colorFilter: ColorFilter.mode(
+        //     //     Colors.white.withOpacity(0.7), BlendMode.dstATop),
+        //     image: AssetImage('images/fundo_app.png'),
+        //     fit: BoxFit.fill,
+        //   ),
+        // ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -67,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.message)));
+                                SnackBar(content: Text(e.toString())));
                           } finally {
                             setState(() {
                               _loading = false;
@@ -81,6 +93,18 @@ class _LoginPageState extends State<LoginPage> {
                           strokeWidth: 3.0,
                         ),
                 ),
+              ),
+              InkWell(
+                child: Text(
+                  'Criar Novo Usuário',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline, color: Colors.blue),
+                ),
+                onTap: () {
+                  Modular.to.pushNamed(
+                    '/CadUsuario',
+                  );
+                },
               ),
             ],
           ),
