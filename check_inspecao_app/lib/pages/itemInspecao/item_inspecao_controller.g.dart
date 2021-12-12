@@ -13,13 +13,13 @@ mixin _$ItemInspecaoController on _ItemInspecaoControllerBase, Store {
       Atom(name: '_ItemInspecaoControllerBase.documentoAtual');
 
   @override
-  DocumentoModel get documentoAtual {
+  DocumentoModel? get documentoAtual {
     _$documentoAtualAtom.reportRead();
     return super.documentoAtual;
   }
 
   @override
-  set documentoAtual(DocumentoModel value) {
+  set documentoAtual(DocumentoModel? value) {
     _$documentoAtualAtom.reportWrite(value, super.documentoAtual, () {
       super.documentoAtual = value;
     });
@@ -29,13 +29,13 @@ mixin _$ItemInspecaoController on _ItemInspecaoControllerBase, Store {
       Atom(name: '_ItemInspecaoControllerBase.itemSelecionado');
 
   @override
-  ItemDocumentoModel get itemSelecionado {
+  ItemDocumentoModel? get itemSelecionado {
     _$itemSelecionadoAtom.reportRead();
     return super.itemSelecionado;
   }
 
   @override
-  set itemSelecionado(ItemDocumentoModel value) {
+  set itemSelecionado(ItemDocumentoModel? value) {
     _$itemSelecionadoAtom.reportWrite(value, super.itemSelecionado, () {
       super.itemSelecionado = value;
     });
@@ -45,7 +45,7 @@ mixin _$ItemInspecaoController on _ItemInspecaoControllerBase, Store {
       ActionController(name: '_ItemInspecaoControllerBase');
 
   @override
-  dynamic setDocumentoAtual(DocumentoModel doc) {
+  dynamic setDocumentoAtual(DocumentoModel? doc) {
     final _$actionInfo = _$_ItemInspecaoControllerBaseActionController
         .startAction(name: '_ItemInspecaoControllerBase.setDocumentoAtual');
     try {

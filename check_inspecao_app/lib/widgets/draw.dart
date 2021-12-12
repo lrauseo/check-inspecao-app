@@ -21,29 +21,20 @@ class _DrawState extends State<Draw> {
   double opacity = 1.0;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
   SelectedMode selectedMode = SelectedMode.StrokeWidth;
-  List<Color> colors = [
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.amber,
-    Colors.black
-  ];
+  List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.amber, Colors.black];
 
   void saveToImage(List<DrawingPoints> pointsList) async {
     final recorder = new ui.PictureRecorder();
     List<Offset> offsetPoints = [];
-    final canvas = new Canvas(recorder,
-        new Rect.fromPoints(new Offset(0.0, 0.0), new Offset(600.0, 600.0)));
+    final canvas = new Canvas(recorder, new Rect.fromPoints(new Offset(0.0, 0.0), new Offset(600.0, 600.0)));
     for (int i = 0; i < pointsList.length - 1; i++) {
       if (pointsList[i] != null && pointsList[i + 1] != null) {
-        canvas.drawLine(pointsList[i].points, pointsList[i + 1].points,
-            pointsList[i].paint);
+        canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!, pointsList![i].paint!);
       } else if (pointsList[i] != null && pointsList[i + 1] == null) {
         offsetPoints.clear();
-        offsetPoints.add(pointsList[i].points);
-        offsetPoints.add(Offset(
-            pointsList[i].points.dx + 0.1, pointsList[i].points.dy + 0.1));
-        canvas.drawPoints(PointMode.points, offsetPoints, pointsList[i].paint);
+        offsetPoints.add(pointsList![i].points!);
+        offsetPoints.add(Offset(pointsList![i].points!.dx! + 0.1, pointsList![i].points!.dy! + 0.1));
+        canvas.drawPoints(PointMode.points, offsetPoints, pointsList![i].paint!);
       }
     }
 
@@ -51,7 +42,7 @@ class _DrawState extends State<Draw> {
     // ByteData imgBytes = new ByteData(picture.approximateBytesUsed);
     final img = await picture.toImage(600, 600);
     final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    var data = Uint8List.view(pngBytes.buffer);
+    var data = Uint8List.view(pngBytes!.buffer);
     var imagem = await Modular.to.pushNamed('/MostrarImagem', arguments: data);
     if (imagem != null) Modular.to.pop(imagem);
     // setState(() {
@@ -80,9 +71,7 @@ class _DrawState extends State<Draw> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50.0),
-                color: Colors.greenAccent),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(50.0), color: Colors.greenAccent),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -95,8 +84,7 @@ class _DrawState extends State<Draw> {
                           icon: Icon(Icons.album),
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.StrokeWidth)
-                                showBottomList = !showBottomList;
+                              if (selectedMode == SelectedMode.StrokeWidth) showBottomList = !showBottomList;
                               selectedMode = SelectedMode.StrokeWidth;
                             });
                           }),
@@ -104,8 +92,7 @@ class _DrawState extends State<Draw> {
                           icon: Icon(Icons.opacity),
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.Opacity)
-                                showBottomList = !showBottomList;
+                              if (selectedMode == SelectedMode.Opacity) showBottomList = !showBottomList;
                               selectedMode = SelectedMode.Opacity;
                             });
                           }),
@@ -113,8 +100,7 @@ class _DrawState extends State<Draw> {
                           icon: Icon(Icons.color_lens),
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.Color)
-                                showBottomList = !showBottomList;
+                              if (selectedMode == SelectedMode.Color) showBottomList = !showBottomList;
                               selectedMode = SelectedMode.Color;
                             });
                           }),
@@ -135,12 +121,8 @@ class _DrawState extends State<Draw> {
                             children: getColorList(),
                           )
                         : Slider(
-                            value: (selectedMode == SelectedMode.StrokeWidth)
-                                ? strokeWidth
-                                : opacity,
-                            max: (selectedMode == SelectedMode.StrokeWidth)
-                                ? 50.0
-                                : 1.0,
+                            value: (selectedMode == SelectedMode.StrokeWidth) ? strokeWidth : opacity,
+                            max: (selectedMode == SelectedMode.StrokeWidth) ? 50.0 : 1.0,
                             min: 0.0,
                             onChanged: (val) {
                               setState(() {
@@ -159,9 +141,9 @@ class _DrawState extends State<Draw> {
       body: GestureDetector(
         onPanUpdate: (details) {
           setState(() {
-            RenderBox renderBox = context.findRenderObject();
+            RenderBox? renderBox = context.findAncestorRenderObjectOfType<RenderBox>();
             points.add(DrawingPoints(
-                points: renderBox.globalToLocal(details.globalPosition),
+                points: renderBox!.globalToLocal(details.globalPosition),
                 paint: Paint()
                   ..strokeCap = strokeCap
                   ..isAntiAlias = true
@@ -171,9 +153,9 @@ class _DrawState extends State<Draw> {
         },
         onPanStart: (details) {
           setState(() {
-            RenderBox renderBox = context.findRenderObject();
+            RenderBox? renderBox = context.findAncestorRenderObjectOfType<RenderBox>();
             points.add(DrawingPoints(
-                points: renderBox.globalToLocal(details.globalPosition),
+                points: renderBox!.globalToLocal(details.globalPosition),
                 paint: Paint()
                   ..strokeCap = strokeCap
                   ..isAntiAlias = true
@@ -183,14 +165,13 @@ class _DrawState extends State<Draw> {
         },
         onPanEnd: (details) {
           setState(() {
-            points.add(null);
+            points.add(DrawingPoints());
           });
         },
         child: Container(
           height: MediaQuery.of(context).size.height / 1.5,
           decoration: BoxDecoration(
-            border: Border.all(
-                color: Colors.black, style: BorderStyle.solid, width: 1),
+            border: Border.all(color: Colors.black, style: BorderStyle.solid, width: 1),
           ),
           child: CustomPaint(
             size: Size.infinite,
@@ -277,21 +258,19 @@ class _DrawState extends State<Draw> {
 
 class DrawingPainter extends CustomPainter {
   DrawingPainter({this.pointsList});
-  List<DrawingPoints> pointsList;
+  List<DrawingPoints>? pointsList;
   List<Offset> offsetPoints = [];
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (int i = 0; i < pointsList.length - 1; i++) {
-      if (pointsList[i] != null && pointsList[i + 1] != null) {
-        canvas.drawLine(pointsList[i].points, pointsList[i + 1].points,
-            pointsList[i].paint);
-      } else if (pointsList[i] != null && pointsList[i + 1] == null) {
+    for (int i = 0; i < pointsList!.length - 1; i++) {
+      if (pointsList?[i] != null && pointsList?[i + 1] != null) {
+        canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!, pointsList![i].paint!);
+      } else if (pointsList?[i] != null && pointsList?[i + 1] == null) {
         offsetPoints.clear();
-        offsetPoints.add(pointsList[i].points);
-        offsetPoints.add(Offset(
-            pointsList[i].points.dx + 0.1, pointsList[i].points.dy + 0.1));
-        canvas.drawPoints(PointMode.points, offsetPoints, pointsList[i].paint);
+        offsetPoints.add(pointsList![i].points!);
+        offsetPoints.add(Offset(pointsList![i].points!.dx! + 0.1, pointsList![i].points!.dy! + 0.1));
+        canvas.drawPoints(PointMode.points, offsetPoints, pointsList![i].paint!);
       }
     }
   }
@@ -301,8 +280,8 @@ class DrawingPainter extends CustomPainter {
 }
 
 class DrawingPoints {
-  Paint paint;
-  Offset points;
+  Paint? paint;
+  Offset? points;
   DrawingPoints({this.points, this.paint});
 }
 

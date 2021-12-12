@@ -39,7 +39,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                 ? null
                 : () async {
                     // Validate returns true if the form is valid, or false otherwise.
-                    if (widget._formKey.currentState.validate()) {
+                    if (widget._formKey.currentState!.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       setState(() {
@@ -47,15 +47,13 @@ class _UsuarioPageState extends State<UsuarioPage> {
                       });
                       UsuarioModel usuarioModel;
                       if (widget._controller.usuario != null) {
-                        usuarioModel = widget._controller.usuario;
+                        usuarioModel = widget._controller.usuario!;
                       } else {
                         usuarioModel = UsuarioModel();
                       }
-                      usuarioModel.empresa =
-                          EmpresaModel(cnpj: widget._ctrlCnpj.text);
-                      usuarioModel.login = LoginModel(
-                          usuariologin: widget._ctrlLogin.text,
-                          senha: widget._ctrlSenha.text);
+                      usuarioModel.empresa = EmpresaModel(cnpj: widget._ctrlCnpj.text);
+                      usuarioModel.login =
+                          LoginModel(usuariologin: widget._ctrlLogin.text, senha: widget._ctrlSenha.text);
                       usuarioModel.nome = widget._ctrlNome.text;
                       widget._controller.setUsuario(usuarioModel);
                       try {
@@ -63,16 +61,15 @@ class _UsuarioPageState extends State<UsuarioPage> {
                           setState(() {
                             widget._isBusy = false;
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Salvo Com Sucesso!')));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text('Salvo Com Sucesso!')));
                           Modular.to.pop();
                         }
-                      } catch (e) {
+                      } on Exception catch (e) {
                         setState(() {
                           widget._isBusy = false;
                         });
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(e.message)));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                       }
                     }
                   },
@@ -174,9 +171,8 @@ class _UsuarioPageState extends State<UsuarioPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      var imagem = await Modular.to.pushNamed('/Assinatura');
-                      var usuarioModel =
-                          widget._controller.usuario ?? UsuarioModel();
+                      Uint8List imagem = await Modular.to.pushNamed('/Assinatura') as Uint8List;
+                      var usuarioModel = widget._controller.usuario ?? UsuarioModel();
                       usuarioModel.assinatura = imagem;
                       widget._controller.setUsuario(usuarioModel);
                     },
@@ -186,8 +182,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                     return Center(
                         child: widget._controller.usuario?.assinatura == null
                             ? Container()
-                            : Image.memory(
-                                widget._controller.usuario?.assinatura));
+                            : Image.memory(widget._controller.usuario?.assinatura ?? Uint8List(0)));
                   })
                 ],
               ))),

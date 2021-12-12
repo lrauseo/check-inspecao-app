@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:check_inspecao_app/models/item_documento_model.dart';
 
 class FotoModel {
-  int id;
-  Uint8List arquivo;
-  ItemDocumentoModel itemDocumento;
+  int? id;
+  Uint8List? arquivo;
+  ItemDocumentoModel? itemDocumento;
 
   FotoModel({this.id, this.itemDocumento, this.arquivo});
 
@@ -32,7 +32,7 @@ class FotoModel {
     // data['arquivo'] = base64.encode(this.arquivo);
     data['arquivo'] = this.arquivo;
     if (this.itemDocumento != null) {
-      data['itemInspecao'] = this.itemDocumento.toJson(false);
+      data['itemInspecao'] = this.itemDocumento!.toJson(false);
     }
     return data;
   }

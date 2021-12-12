@@ -1,13 +1,13 @@
 class EmpresaModel {
-  String id;
-  String razaosocial;
-  String cnpj;
-  String endereco;
-  int numero;
+  String? id;
+  String? razaosocial;
+  String? cnpj;
+  String? endereco;
+  int? numero;
   Null complemento;
-  String cep;
-  String cidade;
-  String uf;
+  String? cep;
+  String? cidade;
+  String? uf;
 
   EmpresaModel(
       {this.id,

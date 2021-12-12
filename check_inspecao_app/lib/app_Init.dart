@@ -14,9 +14,7 @@ class AppInit extends StatelessWidget {
       // darkTheme: Styles.darkThemeData(context),
       initialRoute: '/',
       theme: Style.themeData(context),
-      // darkTheme: Style.themeDataDark(context),
-      onGenerateRoute: Modular.generateRoute,
-      navigatorKey: Modular.navigatorKey,
-    );
+      // darkTheme: Style.themeDataDark(c
+    ).modular();
   }
 }

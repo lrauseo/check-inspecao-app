@@ -14,10 +14,10 @@ class TakePictureScreen extends StatefulWidget {
 }
 
 class _TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController _controllerCamera;
-  int turns;
-  Orientation telaOrientation;
-  Future<void> _initializeControllerFuture;
+  late CameraController _controllerCamera;
+  late int turns;
+  late Orientation telaOrientation;
+  late Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
@@ -109,8 +109,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
             final image = await _controllerCamera.takePicture();
 
             Uint8List data = await image.readAsBytes();
-            var imagem = await Modular.to
-                .pushNamed<Uint8List>('/MostrarImagem', arguments: data);
+            var imagem = await Modular.to.pushNamed<Uint8List>('/MostrarImagem', arguments: data);
             if (imagem != null) Modular.to.pop<Uint8List>(imagem);
           } catch (e) {
             // If an error occurs, log the error to the console.
@@ -125,8 +124,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatefulWidget {
   final Uint8List imagePath;
-  Uint8List imageFile;
-  DisplayPictureScreen({Key key, this.imagePath}) : super(key: key) {
+  Uint8List? imageFile;
+  DisplayPictureScreen({Key? key, required this.imagePath}) : super(key: key) {
     imageFile = imagePath;
   }
 
@@ -151,15 +150,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   editorOption.addOption(RotateOption(90));
 
                   this.widget.imageFile = await ImageEditor.editImage(
-                      image: this.widget.imageFile,
-                      imageEditorOption: editorOption);
+                      image: this.widget.imageFile!, imageEditorOption: editorOption);
                   setState(() {
                     editorOption.reset();
                   });
                 }),
             IconButton(
               onPressed: () {
-                Modular.to.pop<Uint8List>(widget.imageFile);
+                Modular.to.pop<Uint8List>(widget.imageFile!);
               },
               icon: Icon(Icons.check),
             )
@@ -167,6 +165,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ),
         // The image is stored as a file on the device. Use the `Image.file`
         // constructor with the given path to display the image.
-        body: Image.memory(this.widget.imageFile));
+        body: this.widget.imageFile != null ? Image.memory(this.widget.imageFile!) : null);
   }
 }

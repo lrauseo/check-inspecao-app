@@ -17,7 +17,7 @@ import 'package:check_inspecao_app/widgets/draw.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class AppModule extends MainModule {
+class AppModule extends Module {
   // AppModule();
   // List<CameraDescription> cameras;
   @override
@@ -44,23 +44,22 @@ class AppModule extends MainModule {
   Widget get bootstrap => AppInit();
 
   @override
-  List<ModularRouter> get routers => [
-        ModularRouter('/', child: (_, args) => LoginPage()),
-        ModularRouter('/Documentos', child: (_, args) => DocumentosPage()),
-        ModularRouter('/Grupos', child: (_, args) => GrupoPage()),
-        ModularRouter('/Perfil', child: (_, args) => PerfilUsuarioPage()),
-        ModularRouter('/ItemInspecao/:grupoId',
-            child: (_, args) =>
-                ItemInspecaoPage(int.parse(args.params['grupoId']))),
-        ModularRouter('/TirarFoto', child: (_, args) => TakePictureScreen()),
-        ModularRouter('/MostrarImagem', child: (_, args) {
+  List<ChildRoute> get routers => [
+        ChildRoute('/', child: (_, args) => LoginPage()),
+        ChildRoute('/Documentos', child: (_, args) => DocumentosPage()),
+        ChildRoute('/Grupos', child: (_, args) => GrupoPage()),
+        ChildRoute('/Perfil', child: (_, args) => PerfilUsuarioPage()),
+        ChildRoute('/ItemInspecao/:grupoId',
+            child: (_, args) => ItemInspecaoPage(int.parse(args.params['grupoId']))),
+        ChildRoute('/TirarFoto', child: (_, args) => TakePictureScreen()),
+        ChildRoute('/MostrarImagem', child: (_, args) {
           // String imagePath = (args?.data as XFile)?.path;
           return DisplayPictureScreen(imagePath: args?.data);
         }),
-        ModularRouter('/Assinatura', child: (_, args) => Draw()),
-        ModularRouter('/CadUsuario', child: (_, args) => UsuarioPage()),
+        ChildRoute('/Assinatura', child: (_, args) => Draw()),
+        ChildRoute('/CadUsuario', child: (_, args) => UsuarioPage()),
 
-        // ModularRouter('/', child: (_, args) {
+        // ChildRoute('/', child: (_, args) {
         //   var config = Modular.get<AppConfig>();
         //   return MyHomePage(title: 'SmartFipe', config: config);
         // })

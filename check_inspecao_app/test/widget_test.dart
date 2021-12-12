@@ -6,6 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:camera/camera.dart';
+import 'package:check_inspecao_app/app_Init.dart';
 import 'package:check_inspecao_app/app_module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -16,7 +17,10 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
     // final cameras = await availableCameras();
     // Build our app and trigger a frame.
-    await tester.pumpWidget(ModularApp(module: AppModule()));
+    await tester.pumpWidget(ModularApp(
+      module: AppModule(),
+      child: AppInit(),
+    ));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

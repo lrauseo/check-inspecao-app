@@ -12,7 +12,7 @@ class GrupoPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("Grupos"),
         ),
-        body: FutureBuilder<List<GrupoModel>>(
+        body: FutureBuilder<List<GrupoModel>?>(
             future: _controller.listaGrupos(),
             builder: (_, snapshot) {
               if (!snapshot.hasData) {
@@ -20,12 +20,11 @@ class GrupoPage extends StatelessWidget {
               } else {
                 var grupos = snapshot.data;
                 return ListView.builder(
-                    itemCount: grupos.length,
+                    itemCount: grupos!.length,
                     itemBuilder: (_, idx) {
                       return ListTile(
-                          title: Text(grupos[idx]?.descricao),
-                          onTap: () =>
-                              _controller.goToItensInspecao(grupos[idx]));
+                          title: Text(grupos![idx].descricao ?? ''),
+                          onTap: () => _controller.goToItensInspecao(grupos[idx]));
                     });
               }
             }));

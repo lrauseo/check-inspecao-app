@@ -13,13 +13,13 @@ mixin _$DocumentosController on _DocumentosControllerBase, Store {
       Atom(name: '_DocumentosControllerBase.documentoAtual');
 
   @override
-  DocumentoModel get documentoAtual {
+  DocumentoModel? get documentoAtual {
     _$documentoAtualAtom.reportRead();
     return super.documentoAtual;
   }
 
   @override
-  set documentoAtual(DocumentoModel value) {
+  set documentoAtual(DocumentoModel? value) {
     _$documentoAtualAtom.reportWrite(value, super.documentoAtual, () {
       super.documentoAtual = value;
     });

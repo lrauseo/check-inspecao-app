@@ -1,6 +1,6 @@
 class GrupoModel {
-  int id;
-  String descricao;
+  int? id;
+  String? descricao;
 
   GrupoModel({this.id, this.descricao});
 

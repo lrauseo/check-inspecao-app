@@ -24,7 +24,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
   var _controller = Modular.get<ItemInspecaoController>();
   var _documentosController = Modular.get<DocumentosController>();
 
-  TextEditingController _txtControlerObs;
+  TextEditingController _txtControlerObs = TextEditingController();
 
   @override
   void dispose() {
@@ -43,20 +43,18 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
             IconButton(
                 icon: Icon(Icons.save),
                 onPressed: () async {
-                  var erros =
-                      _controller.validaItens(_controller.itensDocumento);
+                  var erros = _controller.validaItens(_controller.itensDocumento);
                   // if (erros.length > 0) {
                   //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   //       backgroundColor: Colors.red,
                   //       content: Text("Existem itens não marcados !")));
                   //   return;
                   // }
-                  var doc = await _documentosController
-                      .salvarDocumento(_controller.itensDocumento);
+                  var doc = await _documentosController.salvarDocumento(_controller.itensDocumento);
 
                   if (doc != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Itens Salvos com sucesso!")));
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Itens Salvos com sucesso!")));
                     _controller.setDocumentoAtual(null);
                     Modular.to.pop(true);
                   }
@@ -70,10 +68,10 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                 return Center(child: CircularProgressIndicator());
               } else {
                 return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (_, idx) {
-                      _txtControlerObs = TextEditingController(
-                          text: _controller.itensDocumento[idx]?.observacao);
+                      _txtControlerObs =
+                          TextEditingController(text: _controller.itensDocumento[idx]?.observacao);
                       return Column(
                         children: [
                           Card(
@@ -89,24 +87,20 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                     padding: EdgeInsets.only(left: 5, right: 5),
                                     decoration: BoxDecoration(
                                         color: Colors.blue[100],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
+                                        borderRadius: BorderRadius.all(Radius.circular(20))),
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
                                     width: MediaQuery.of(context).size.width,
                                     child: Observer(builder: (_) {
                                       return Text(
                                         "Classificação: ${_controller.itensDocumento[idx]?.itemInspecao?.classificacao}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                       );
                                     }),
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                         border: Border(
-                                            bottom: BorderSide(
-                                                width: 2,
-                                                color: Colors.blue[100]))),
+                                            bottom: BorderSide(width: 2, color: Colors.blue.shade100))),
                                     child: Observer(builder: (_) {
                                       return Text(
                                           "Descrição: ${_controller.itensDocumento[idx]?.itemInspecao?.descricao}");
@@ -119,16 +113,10 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value: _controller
-                                                          .itensDocumento[idx]
-                                                          ?.sim ??
-                                                      false,
+                                                  value: _controller.itensDocumento[idx]?.sim ?? false,
                                                   onChanged: (checked) {
-                                                    var item = _controller
-                                                        .itensDocumento[idx];
-                                                    _controller
-                                                        .setOpcaoInspecao(item,
-                                                            OpcaoInspecao.sim);
+                                                    var item = _controller.itensDocumento[idx];
+                                                    _controller.setOpcaoInspecao(item, OpcaoInspecao.sim);
                                                   });
                                             }),
                                             Text("Sim")
@@ -140,16 +128,10 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value: _controller
-                                                          .itensDocumento[idx]
-                                                          ?.nao ??
-                                                      false,
+                                                  value: _controller.itensDocumento[idx]?.nao ?? false,
                                                   onChanged: (checked) {
-                                                    var item = _controller
-                                                        .itensDocumento[idx];
-                                                    _controller
-                                                        .setOpcaoInspecao(item,
-                                                            OpcaoInspecao.nao);
+                                                    var item = _controller.itensDocumento[idx];
+                                                    _controller.setOpcaoInspecao(item, OpcaoInspecao.nao);
                                                   });
                                             }),
                                             Text("Não")
@@ -161,18 +143,12 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value: _controller
-                                                          .itensDocumento[idx]
-                                                          ?.naoSeAplica ??
-                                                      false,
+                                                  value:
+                                                      _controller.itensDocumento[idx]?.naoSeAplica ?? false,
                                                   onChanged: (checked) {
-                                                    var item = _controller
-                                                        .itensDocumento[idx];
-                                                    _controller
-                                                        .setOpcaoInspecao(
-                                                            item,
-                                                            OpcaoInspecao
-                                                                .naoSeAplica);
+                                                    var item = _controller.itensDocumento[idx];
+                                                    _controller.setOpcaoInspecao(
+                                                        item, OpcaoInspecao.naoSeAplica);
                                                   });
                                             }),
                                             Text("NA")
@@ -184,17 +160,11 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                         children: [
                                           Observer(builder: (_) {
                                             return Checkbox(
-                                                value: _controller
-                                                        .itensDocumento[idx]
-                                                        ?.naoObservado ??
-                                                    false,
+                                                value: _controller.itensDocumento[idx]?.naoObservado ?? false,
                                                 onChanged: (checked) {
-                                                  var item = _controller
-                                                      .itensDocumento[idx];
+                                                  var item = _controller.itensDocumento[idx];
                                                   _controller.setOpcaoInspecao(
-                                                      item,
-                                                      OpcaoInspecao
-                                                          .naoObservado);
+                                                      item, OpcaoInspecao.naoObservado);
                                                 });
                                           }),
                                           Text("NO")
@@ -203,33 +173,23 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                     ],
                                   ),
                                   TextField(
-                                    controller: _txtControlerObs =
-                                        TextEditingController(
-                                            text: _controller
-                                                .itensDocumento[idx]
-                                                ?.observacao),
+                                    controller: _txtControlerObs = TextEditingController(
+                                        text: _controller.itensDocumento[idx]?.observacao),
                                     onChanged: (value) {
-                                      _controller.itensDocumento[idx]
-                                          ?.observacao = value;
+                                      _controller.itensDocumento[idx]?.observacao = value;
 
                                       // _controller.addItemDocumento(
                                       //     _controller.itensDocumento[idx]);
 
-                                      this._txtControlerObs.selection =
-                                          TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: _txtControlerObs
-                                                      .text.length));
+                                      this._txtControlerObs.selection = TextSelection.fromPosition(
+                                          TextPosition(offset: _txtControlerObs.text.length));
                                     },
 
-                                    decoration:
-                                        InputDecoration(hintText: "Observação"),
+                                    decoration: InputDecoration(hintText: "Observação"),
                                     // controller: _txtObservacaoCtrl,
-                                    textCapitalization:
-                                        TextCapitalization.characters,
+                                    textCapitalization: TextCapitalization.characters,
                                     inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp("[a-zA-Z 0-9]"))
+                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z 0-9]"))
                                     ],
                                     // onChanged: (value) =>
                                     //     controller.setObs(value)
@@ -244,11 +204,9 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: _listaFotos(
                                               ElevatedButton(
                                                   onPressed: () async {
-                                                    await _tirarFoto(_controller
-                                                        .itensDocumento[idx]);
+                                                    await _tirarFoto(_controller.itensDocumento[idx]);
                                                   },
-                                                  child:
-                                                      Icon(Icons.add_a_photo)),
+                                                  child: Icon(Icons.add_a_photo)),
                                               _controller.itensDocumento[idx]),
                                         );
                                       }),
@@ -275,7 +233,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
     // ));
 
     item.fotos?.forEach((element) {
-      if (element.arquivo == null) item.fotos.remove(element);
+      if (element.arquivo == null) item.fotos?.remove(element);
     });
 
     item.fotos?.forEach((e) => lista.add(InkWell(
@@ -292,9 +250,8 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                             // var file = XFile(e.arquivo);
 
                             Navigator.pop(context);
-                            var imagem = await Modular.to.pushNamed(
-                                '/MostrarImagem',
-                                arguments: e.arquivo);
+                            Uint8List imagem = await Modular.to
+                                .pushNamed('/MostrarImagem', arguments: e.arquivo) as Uint8List;
                             if (imagem != null) {
                               _controller.excluirFoto(item, e);
                               _controller.addFoto(item, imagem);
@@ -314,7 +271,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
         },
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Image.memory(e.arquivo),
+          child: e.arquivo != null ? Image.memory(e.arquivo!) : null,
         ))));
     return lista;
   }
@@ -330,7 +287,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                 ElevatedButton(
                     onPressed: () async {
                       Modular.to.pop();
-                      PickedFile pickedFile = await ImagePicker().getImage(
+                      PickedFile? pickedFile = await ImagePicker().getImage(
                         source: ImageSource.camera,
                         maxWidth: 1800,
                         maxHeight: 1800,
@@ -338,8 +295,8 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                       );
                       if (pickedFile != null) {
                         Uint8List data = await pickedFile.readAsBytes();
-                        var imagem = await Modular.to
-                            .pushNamed('/MostrarImagem', arguments: data);
+                        Uint8List imagem =
+                            await Modular.to.pushNamed('/MostrarImagem', arguments: data) as Uint8List;
                         if (imagem != null) _controller.addFoto(item, imagem);
                       }
                     },
@@ -347,7 +304,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                 TextButton(
                     onPressed: () async {
                       Modular.to.pop();
-                      PickedFile pickedFile = await ImagePicker().getImage(
+                      PickedFile? pickedFile = await ImagePicker().getImage(
                         source: ImageSource.gallery,
                         maxWidth: 1800,
                         maxHeight: 1800,

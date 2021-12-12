@@ -41,17 +41,15 @@ class _DocumentosPageState extends State<DocumentosPage> {
                 setState(() {});
               },
               child: ListView.builder(
-                itemCount: snapshot?.data?.length,
+                itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    leading: Text(snapshot.data[index]?.id.toString()),
-                    title: Text(snapshot.data[index]?.cliente?.nome ?? ""),
-                    trailing: Text(DateFormat('dd/MM/yyyy')
-                            .format(snapshot.data[index]?.dataDocumento) ??
-                        ''),
+                    leading: Text(snapshot.data![index].id.toString()),
+                    title: Text(snapshot.data![index].cliente?.nome ?? ""),
+                    trailing: Text(DateFormat('dd/MM/yyyy').format(snapshot.data![index].dataDocumento!)),
                     onTap: () async {
-                      _controller.documentoAtual = await _controller
-                          .getDocumentoById(snapshot.data[index].id);
+                      _controller.documentoAtual =
+                          await _controller.getDocumentoById(snapshot.data![index].id ?? 0);
                       await Modular.to.pushNamed("/Grupos");
                       setState(() {});
                     },

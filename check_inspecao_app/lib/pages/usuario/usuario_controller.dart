@@ -12,7 +12,7 @@ abstract class _UsuarioControllerBase with Store {
   final service = Modular.get<CheckInspecaoService>();
 
   @observable
-  UsuarioModel usuario;
+  UsuarioModel? usuario;
 
   @action
   setUsuario(UsuarioModel usuario) => this.usuario = usuario;
@@ -21,7 +21,7 @@ abstract class _UsuarioControllerBase with Store {
   Future<bool> salvarUsuario() async {
     try {
       if (this.usuario == null) return false;
-      UsuarioModel usuarioModel = await service.salvarUsuario(usuario);
+      UsuarioModel usuarioModel = await service.salvarUsuario(usuario!);
       return usuarioModel != null;
     } catch (e) {
       throw e;

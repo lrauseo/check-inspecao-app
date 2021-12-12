@@ -13,8 +13,7 @@ class CheckInspecaoService {
   final String _autenticarUsuario = "/Usuario/AutenticarUsuario/";
   Future<UsuarioAuthModel> validarLogin(String usuario, String senha) async {
     try {
-      var url = Uri.http(Constantes.baseUrl, _autenticarUsuario,
-          {'login': usuario, 'senha': senha});
+      var url = Uri.http(Constantes.baseUrl, _autenticarUsuario, {'login': usuario, 'senha': senha});
       var response = await http.post(url
           // , headers: {
           //   'content-type': 'application/json',
@@ -27,7 +26,7 @@ class CheckInspecaoService {
           // }
           );
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         print("UsuarioAutenticado...");
         var usuarioAuth = UsuarioAuthModel.fromJson(json);
         return usuarioAuth;
@@ -39,16 +38,14 @@ class CheckInspecaoService {
     }
   }
 
-  Future<DocumentoModel> novoDocumento(int usuarioId, int clientId) async {
+  Future<DocumentoModel?> novoDocumento(int usuarioId, int clientId) async {
     final String _novoDocumento = "/Documento/NovoDocumento/";
     try {
-      var url = Uri.http(Constantes.baseUrl, _novoDocumento, {
-        'usuarioId': usuarioId.toString(),
-        'clienteId': clientId.toString()
-      });
+      var url = Uri.http(Constantes.baseUrl, _novoDocumento,
+          {'usuarioId': usuarioId.toString(), 'clienteId': clientId.toString()});
       var response = await http.post(url);
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         print("Novo Documento criado...");
         var documento = DocumentoModel.fromJson(json);
         return documento;
@@ -60,7 +57,7 @@ class CheckInspecaoService {
     }
   }
 
-  Future<List<GrupoModel>> listaGrupos() async {
+  Future<List<GrupoModel>?> listaGrupos() async {
     final String _grupo = "/Grupo/";
     try {
       var url = Uri.http(Constantes.baseUrl, _grupo);
@@ -84,8 +81,7 @@ class CheckInspecaoService {
   listaItensInspecao(int grupoId) async {
     final String _itemInspecao = "/Grupo/BuscaItensInspecao/";
     try {
-      var url = Uri.http(
-          Constantes.baseUrl, _itemInspecao, {'grupoId': grupoId.toString()});
+      var url = Uri.http(Constantes.baseUrl, _itemInspecao, {'grupoId': grupoId.toString()});
       var response = await http.get(url);
       if (response.statusCode == 200) {
         Iterable json = jsonDecode(response.body);
@@ -109,11 +105,10 @@ class CheckInspecaoService {
       var url = Uri.http(Constantes.baseUrl, _salvarDocumento);
       // print(documentoAtual.toJson().toString());
       var param = jsonEncode(documentoAtual.toJson(true));
-      var response = await http.post(url,
-          body: param,
-          headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+      var response =
+          await http.post(url, body: param, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         print("Documento Salvo...");
         return DocumentoModel.fromJson(json);
       } else {
@@ -130,11 +125,10 @@ class CheckInspecaoService {
       var url = Uri.http(Constantes.baseUrl, _salvarUsuario);
       // print(documentoAtual.toJson().toString());
       var param = jsonEncode(usuario.toJson());
-      var response = await http.post(url,
-          body: param,
-          headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+      var response =
+          await http.post(url, body: param, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         print("Usuario Salvo...");
         return UsuarioModel.fromJson(json);
       } else {
@@ -148,11 +142,10 @@ class CheckInspecaoService {
   documentoById(int documentoId) async {
     final String _documentoById = "/Documento/GetDocumentoById/";
     try {
-      var url = Uri.http(Constantes.baseUrl, _documentoById,
-          {'documentoId': documentoId.toString()});
+      var url = Uri.http(Constantes.baseUrl, _documentoById, {'documentoId': documentoId.toString()});
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         print("Busca documento...");
         return DocumentoModel.fromJson(json);
       } else {
@@ -166,10 +159,8 @@ class CheckInspecaoService {
   getDocumentos(int usuarioId, int clienteId) async {
     final String _documentos = "/Documento/GetDocumentos/";
     try {
-      var url = Uri.http(Constantes.baseUrl, _documentos, {
-        'usuarioId': usuarioId.toString(),
-        'clienteId': clienteId.toString()
-      });
+      var url = Uri.http(Constantes.baseUrl, _documentos,
+          {'usuarioId': usuarioId.toString(), 'clienteId': clienteId.toString()});
       var response = await http.get(url);
       if (response.statusCode == 200) {
         Iterable json = jsonDecode(response.body);

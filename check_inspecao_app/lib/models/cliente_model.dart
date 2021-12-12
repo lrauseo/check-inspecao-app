@@ -1,8 +1,8 @@
 class ClienteModel {
-  int id;
-  String nome;
-  String cpf;
-  String dataCadastro;
+  int? id;
+  String? nome;
+  String? cpf;
+  String? dataCadastro;
   // List<DocumentoModel> documentos;
 
   ClienteModel({this.id, this.nome, this.cpf, this.dataCadastro});

@@ -12,13 +12,13 @@ mixin _$GrupoController on _GrupoControllerBase, Store {
   final _$grupoAtualAtom = Atom(name: '_GrupoControllerBase.grupoAtual');
 
   @override
-  GrupoModel get grupoAtual {
+  GrupoModel? get grupoAtual {
     _$grupoAtualAtom.reportRead();
     return super.grupoAtual;
   }
 
   @override
-  set grupoAtual(GrupoModel value) {
+  set grupoAtual(GrupoModel? value) {
     _$grupoAtualAtom.reportWrite(value, super.grupoAtual, () {
       super.grupoAtual = value;
     });
@@ -28,7 +28,7 @@ mixin _$GrupoController on _GrupoControllerBase, Store {
       AsyncAction('_GrupoControllerBase.listaGrupos');
 
   @override
-  Future<List<GrupoModel>> listaGrupos() {
+  Future<List<GrupoModel>?> listaGrupos() {
     return _$listaGruposAsyncAction.run(() => super.listaGrupos());
   }
 

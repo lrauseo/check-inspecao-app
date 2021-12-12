@@ -3,18 +3,13 @@ import 'package:check_inspecao_app/models/item_documento_model.dart';
 import 'package:check_inspecao_app/models/usuario_model.dart';
 
 class DocumentoModel {
-  int id;
-  List<ItemDocumentoModel> itens;
-  UsuarioModel usuarioInspecao;
-  ClienteModel cliente;
-  DateTime dataDocumento;
+  int? id;
+  List<ItemDocumentoModel>? itens;
+  UsuarioModel? usuarioInspecao;
+  ClienteModel? cliente;
+  DateTime? dataDocumento;
 
-  DocumentoModel(
-      {this.id,
-      this.itens,
-      this.usuarioInspecao,
-      this.cliente,
-      this.dataDocumento});
+  DocumentoModel({this.id, this.itens, this.usuarioInspecao, this.cliente, this.dataDocumento});
 
   DocumentoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -22,15 +17,12 @@ class DocumentoModel {
     if (json['itens'] != null) {
       itens = <ItemDocumentoModel>[];
       json['itens'].forEach((v) {
-        itens.add(ItemDocumentoModel.fromJson(v));
+        itens!.add(ItemDocumentoModel.fromJson(v));
       });
     }
-    usuarioInspecao = json['usuarioInspecao'] != null
-        ? new UsuarioModel.fromJson(json['usuarioInspecao'])
-        : null;
-    cliente = json['cliente'] != null
-        ? new ClienteModel.fromJson(json['cliente'])
-        : null;
+    usuarioInspecao =
+        json['usuarioInspecao'] != null ? new UsuarioModel.fromJson(json['usuarioInspecao']) : null;
+    cliente = json['cliente'] != null ? new ClienteModel.fromJson(json['cliente']) : null;
   }
 
   Map<String, dynamic> toJson(bool parseChildren) {
@@ -40,13 +32,13 @@ class DocumentoModel {
 
     if (parseChildren) {
       if (this.itens != null) {
-        data['itens'] = this.itens.map((v) => v.toJson(true)).toList();
+        data['itens'] = this.itens!.map((v) => v.toJson(true)).toList();
       }
       if (this.usuarioInspecao != null) {
-        data['usuarioInspecao'] = this.usuarioInspecao.toJson();
+        data['usuarioInspecao'] = this.usuarioInspecao!.toJson();
       }
       if (this.cliente != null) {
-        data['cliente'] = this.cliente.toJson();
+        data['cliente'] = this.cliente!.toJson();
       }
     }
     return data;

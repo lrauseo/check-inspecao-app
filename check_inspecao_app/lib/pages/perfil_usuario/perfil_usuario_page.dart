@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:check_inspecao_app/models/usuario_model.dart';
 import 'package:check_inspecao_app/pages/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -121,9 +123,8 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      var imagem = await Modular.to.pushNamed('/Assinatura');
-                      var usuarioModel =
-                          widget._controller.usuario ?? UsuarioModel();
+                      Uint8List imagem = await Modular.to.pushNamed('/Assinatura') as Uint8List;
+                      var usuarioModel = widget._controller.usuario ?? UsuarioModel();
                       usuarioModel.assinatura = imagem;
                       widget._controller.setUsuario(usuarioModel);
                     },
@@ -133,8 +134,7 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                     return Center(
                         child: widget._controller.usuario?.assinatura == null
                             ? Container()
-                            : Image.memory(
-                                widget._controller.usuario?.assinatura));
+                            : Image.memory(widget._controller.usuario?.assinatura ?? Uint8List(0)));
                   })
                 ],
               ))),

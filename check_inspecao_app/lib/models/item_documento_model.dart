@@ -3,15 +3,15 @@ import 'package:check_inspecao_app/models/foto_model.dart';
 import 'package:check_inspecao_app/models/item_inspecao_model.dart';
 
 class ItemDocumentoModel {
-  int id;
-  ItemInspecaoModel itemInspecao;
-  DocumentoModel documento;
-  bool sim;
-  bool nao;
-  bool naoSeAplica;
-  String observacao;
-  bool naoObservado;
-  List<FotoModel> fotos;
+  int? id;
+  ItemInspecaoModel? itemInspecao;
+  DocumentoModel? documento;
+  bool? sim;
+  bool? nao;
+  bool? naoSeAplica;
+  String? observacao;
+  bool? naoObservado;
+  List<FotoModel>? fotos;
 
   ItemDocumentoModel(
       {this.id,
@@ -26,12 +26,8 @@ class ItemDocumentoModel {
 
   ItemDocumentoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    itemInspecao = json['item'] != null
-        ? new ItemInspecaoModel.fromJson(json['item'])
-        : null;
-    documento = json['documentoPai'] != null
-        ? new DocumentoModel.fromJson(json['documentoPai'])
-        : null;
+    itemInspecao = json['item'] != null ? new ItemInspecaoModel.fromJson(json['item']) : null;
+    documento = json['documentoPai'] != null ? new DocumentoModel.fromJson(json['documentoPai']) : null;
     sim = json['sim'];
     nao = json['nao'];
     naoSeAplica = json['naoSeAplica'];
@@ -40,7 +36,7 @@ class ItemDocumentoModel {
     if (json['fotos'] != null) {
       fotos = <FotoModel>[];
       json['fotos'].forEach((v) {
-        fotos.add(new FotoModel.fromJson(v));
+        fotos!.add(new FotoModel.fromJson(v));
       });
     }
   }
@@ -50,13 +46,13 @@ class ItemDocumentoModel {
     data['id'] = this.id;
     if (parseChildren) {
       if (this.itemInspecao != null) {
-        data['item'] = this.itemInspecao.toJson();
+        data['item'] = this.itemInspecao!.toJson();
       }
       if (this.documento != null) {
-        data['documentoPai'] = this.documento.toJson(false);
+        data['documentoPai'] = this.documento!.toJson(false);
       }
       if (this.fotos != null) {
-        data['fotos'] = this.fotos.map((v) => v.toJson()).toList();
+        data['fotos'] = this.fotos!.map((v) => v.toJson()).toList();
       }
     }
     data['sim'] = this.sim;

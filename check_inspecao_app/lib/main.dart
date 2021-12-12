@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:check_inspecao_app/app_Init.dart';
 import 'package:check_inspecao_app/app_module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,5 +14,8 @@ Future<void> main() async {
   // if (Platform.isAndroid || Platform.isIOS) cameras = await availableCameras();
   SharedPreferences.setMockInitialValues({});
   // final firstCamera = cameras.first;
-  runApp(ModularApp(module: AppModule()));
+  runApp(ModularApp(
+    module: AppModule(),
+    child: AppInit(),
+  ));
 }

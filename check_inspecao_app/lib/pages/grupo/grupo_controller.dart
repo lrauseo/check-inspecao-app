@@ -9,9 +9,10 @@ class GrupoController = _GrupoControllerBase with _$GrupoController;
 abstract class _GrupoControllerBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
   @observable
-  GrupoModel grupoAtual;
+  GrupoModel? grupoAtual;
+
   @action
-  Future<List<GrupoModel>> listaGrupos() async {
+  Future<List<GrupoModel>?> listaGrupos() async {
     try {
       var grupos = await _service.listaGrupos();
       return grupos;
@@ -23,8 +24,9 @@ abstract class _GrupoControllerBase with Store {
   @action
   goToItensInspecao(GrupoModel grupo) async {
     grupoAtual = grupo;
-    var voltaDocumentos =
-        await Modular.to.pushNamed("/ItemInspecao/${grupo.id}") ?? false;
-    if (voltaDocumentos) Modular.to.pop(voltaDocumentos);
+    bool voltaDocumentos = await Modular.to.pushNamed("/ItemInspecao/${grupo.id}") ?? false;
+    if (voltaDocumentos) {
+      Modular.to.pop(voltaDocumentos);
+    }
   }
 }
