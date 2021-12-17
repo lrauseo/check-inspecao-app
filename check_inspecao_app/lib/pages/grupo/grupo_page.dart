@@ -23,7 +23,7 @@ class GrupoPage extends StatelessWidget {
                     itemCount: grupos!.length,
                     itemBuilder: (_, idx) {
                       return ListTile(
-                          title: Text(grupos![idx].descricao ?? ''),
+                          title: Text(grupos[idx].descricao ?? ''),
                           onTap: () => _controller.goToItensInspecao(grupos[idx]));
                     });
               }

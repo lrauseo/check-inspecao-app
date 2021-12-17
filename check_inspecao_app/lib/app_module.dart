@@ -54,7 +54,7 @@ class AppModule extends Module {
         ChildRoute('/TirarFoto', child: (_, args) => TakePictureScreen()),
         ChildRoute('/MostrarImagem', child: (_, args) {
           // String imagePath = (args?.data as XFile)?.path;
-          return DisplayPictureScreen(imagePath: args?.data);
+          return DisplayPictureScreen(imagePath: args.data);
         }),
         ChildRoute('/Assinatura', child: (_, args) => Draw()),
         ChildRoute('/CadUsuario', child: (_, args) => UsuarioPage()),

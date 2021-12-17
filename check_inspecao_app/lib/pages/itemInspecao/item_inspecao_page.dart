@@ -71,7 +71,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (_, idx) {
                       _txtControlerObs =
-                          TextEditingController(text: _controller.itensDocumento[idx]?.observacao);
+                          TextEditingController(text: _controller.itensDocumento[idx].observacao);
                       return Column(
                         children: [
                           Card(
@@ -92,7 +92,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                     width: MediaQuery.of(context).size.width,
                                     child: Observer(builder: (_) {
                                       return Text(
-                                        "Classificação: ${_controller.itensDocumento[idx]?.itemInspecao?.classificacao}",
+                                        "Classificação: ${_controller.itensDocumento[idx].itemInspecao?.classificacao}",
                                         style: TextStyle(fontWeight: FontWeight.bold),
                                       );
                                     }),
@@ -103,7 +103,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                             bottom: BorderSide(width: 2, color: Colors.blue.shade100))),
                                     child: Observer(builder: (_) {
                                       return Text(
-                                          "Descrição: ${_controller.itensDocumento[idx]?.itemInspecao?.descricao}");
+                                          "Descrição: ${_controller.itensDocumento[idx].itemInspecao?.descricao}");
                                     }),
                                   ),
                                   Row(
@@ -113,7 +113,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value: _controller.itensDocumento[idx]?.sim ?? false,
+                                                  value: _controller.itensDocumento[idx].sim ?? false,
                                                   onChanged: (checked) {
                                                     var item = _controller.itensDocumento[idx];
                                                     _controller.setOpcaoInspecao(item, OpcaoInspecao.sim);
@@ -128,7 +128,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value: _controller.itensDocumento[idx]?.nao ?? false,
+                                                  value: _controller.itensDocumento[idx].nao ?? false,
                                                   onChanged: (checked) {
                                                     var item = _controller.itensDocumento[idx];
                                                     _controller.setOpcaoInspecao(item, OpcaoInspecao.nao);
@@ -143,8 +143,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                           children: [
                                             Observer(builder: (_) {
                                               return Checkbox(
-                                                  value:
-                                                      _controller.itensDocumento[idx]?.naoSeAplica ?? false,
+                                                  value: _controller.itensDocumento[idx].naoSeAplica ?? false,
                                                   onChanged: (checked) {
                                                     var item = _controller.itensDocumento[idx];
                                                     _controller.setOpcaoInspecao(
@@ -160,7 +159,7 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                         children: [
                                           Observer(builder: (_) {
                                             return Checkbox(
-                                                value: _controller.itensDocumento[idx]?.naoObservado ?? false,
+                                                value: _controller.itensDocumento[idx].naoObservado ?? false,
                                                 onChanged: (checked) {
                                                   var item = _controller.itensDocumento[idx];
                                                   _controller.setOpcaoInspecao(
@@ -174,9 +173,9 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
                                   ),
                                   TextField(
                                     controller: _txtControlerObs = TextEditingController(
-                                        text: _controller.itensDocumento[idx]?.observacao),
+                                        text: _controller.itensDocumento[idx].observacao),
                                     onChanged: (value) {
-                                      _controller.itensDocumento[idx]?.observacao = value;
+                                      _controller.itensDocumento[idx].observacao = value;
 
                                       // _controller.addItemDocumento(
                                       //     _controller.itensDocumento[idx]);
