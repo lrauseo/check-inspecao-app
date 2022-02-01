@@ -7,14 +7,32 @@ import 'package:check_inspecao_app/app/models/item_inspecao_model.dart';
 import 'package:check_inspecao_app/app/models/usuario_auth_model.dart';
 import 'package:check_inspecao_app/app/models/usuario_model.dart';
 import 'package:check_inspecao_app/constantes.dart';
+import 'package:encrypt/encrypt.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckInspecaoService {
   final String _autenticarUsuario = "/Usuario/AutenticarUsuario/";
   Future<UsuarioAuthModel> validarLogin(String usuario, String senha) async {
     try {
-      var url = Uri.http(Constantes.baseUrl, _autenticarUsuario, {'login': usuario, 'senha': senha});
+      Uri url;
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String key = stringToBase64.encode(Criptografia.key);
+      String iv = stringToBase64.encode(Criptografia.privateKey);
+
+      final encrypter = Encrypter(AES(Key.fromBase64(key), mode: AESMode.cbc, padding: 'PKCS7'));
+
+      final encrypted = encrypter.encrypt(senha, iv: IV.fromBase64(iv));
+      // final decrypted = encrypter.decrypt(encrypted, iv: IV.fromBase64(iv));
+
+      if (Constantes.httpType == Httptype.http) {
+        url = Uri.http(Constantes.baseUrl, _autenticarUsuario, {'login': usuario, 'senha': encrypted.base64});
+      } else {
+        url =
+            Uri.https(Constantes.baseUrl, _autenticarUsuario, {'login': usuario, 'senha': encrypted.base64});
+      }
+
       var response = await http.post(url
           // , headers: {
           //   'content-type': 'application/json',
@@ -157,12 +175,15 @@ class CheckInspecaoService {
     }
   }
 
-  getDocumentos(int usuarioId, int clienteId) async {
+  getDocumentos(int clienteId) async {
     final String _documentos = "/Documento/GetDocumentos/";
     try {
-      var url = Uri.http(Constantes.baseUrl, _documentos,
-          {'usuarioId': usuarioId.toString(), 'clienteId': clienteId.toString()});
-      var response = await http.get(url);
+      var prefs = await SharedPreferences.getInstance();
+      String usuarioAuthJson = prefs.getString(ConstsSharedPreferences.usuarioAuth)!;
+      var usuarioAuth = UsuarioAuthModel.fromJson(jsonDecode(usuarioAuthJson));
+
+      var url = Uri.http(Constantes.baseUrl, _documentos, {'clienteId': clienteId.toString()});
+      var response = await http.get(url, headers: {'Authorization': 'Bearer ${usuarioAuth.token}'});
       if (response.statusCode == 200) {
         Iterable json = jsonDecode(response.body);
         print("Busca documentos...");

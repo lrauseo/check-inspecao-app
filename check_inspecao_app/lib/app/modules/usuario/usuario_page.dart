@@ -51,9 +51,9 @@ class _UsuarioPageState extends State<UsuarioPage> {
                       } else {
                         usuarioModel = UsuarioModel();
                       }
-                      usuarioModel.empresa = EmpresaModel(cnpj: widget._ctrlCnpj.text);
-                      usuarioModel.login =
-                          LoginModel(usuariologin: widget._ctrlLogin.text, senha: widget._ctrlSenha.text);
+                      //usuarioModel.empresa = EmpresaModel(cnpj: widget._ctrlCnpj.text);
+                      usuarioModel.login = widget._ctrlLogin.text;
+                      usuarioModel.senha = widget._ctrlSenha.text;
                       usuarioModel.nome = widget._ctrlNome.text;
                       widget._controller.setUsuario(usuarioModel);
                       try {
@@ -90,18 +90,18 @@ class _UsuarioPageState extends State<UsuarioPage> {
                       maxRadius: 60.0,
                     )),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: "CNPJ Empresa"),
-                    maxLength: 14,
-                    // The validator receives the text that the user has entered.
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Informa o CNPJ da Empresa';
-                      }
-                      return null;
-                    },
-                    controller: widget._ctrlCnpj,
-                  ),
+                  // TextFormField(
+                  //   decoration: InputDecoration(labelText: "CNPJ Empresa"),
+                  //   maxLength: 14,
+                  //   // The validator receives the text that the user has entered.
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Informa o CNPJ da Empresa';
+                  //     }
+                  //     return null;
+                  //   },
+                  //   controller: widget._ctrlCnpj,
+                  // ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: TextFormField(

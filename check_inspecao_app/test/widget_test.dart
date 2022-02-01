@@ -6,8 +6,8 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:camera/camera.dart';
-import 'package:check_inspecao_app/app_Init.dart';
-import 'package:check_inspecao_app/app_module.dart';
+import 'package:check_inspecao_app/app/app_module.dart';
+import 'package:check_inspecao_app/app/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +19,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(ModularApp(
       module: AppModule(),
-      child: AppInit(),
+      child: AppWidget(),
     ));
 
     // Verify that our counter starts at 0.

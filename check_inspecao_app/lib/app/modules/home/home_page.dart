@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: MenuDrawerPrincipal(),
       body: FutureBuilder<List<DocumentoModel>>(
-        future: _controller.getDocumentos(1, 1),
+        future: _controller.getDocumentos(1),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(

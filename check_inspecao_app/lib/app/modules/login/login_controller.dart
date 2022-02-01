@@ -22,7 +22,6 @@ abstract class _LoginControllerBase with Store {
       if (usuarioAuth != null) {
         var prefs = await SharedPreferences.getInstance();
         prefs.setString(ConstsSharedPreferences.usuarioAuth, usuarioAuth.toJson().toString());
-        _usuarioController.setUsuario(usuarioAuth.usuario!);
       }
       return usuarioAuth != null;
     } on LoginException {

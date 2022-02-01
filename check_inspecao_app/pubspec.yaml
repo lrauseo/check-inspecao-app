@@ -37,12 +37,16 @@ dependencies:
   flutter_modular: ^4.3.0
   mobx: ^2.0.5
   flutter_mobx: ^2.0.2
+  dio: 
   http: 
   image_picker: 
   image_editor: 
   camera: 
   shared_preferences: 
   signature: 
+  intl: ^0.17.0
+  encrypt: 
+  jwt_decoder: 
 
 dev_dependencies:
   flutter_test:
