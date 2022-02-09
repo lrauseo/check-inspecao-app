@@ -31,80 +31,73 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: const Text("Login"),
         centerTitle: true,
       ),
-      body: Container(
-        // padding: EdgeInsets.fromLTRB(1, 1, 1, 1),
-        // decoration: BoxDecoration(
-        //   image: DecorationImage(
-        //     // colorFilter: ColorFilter.mode(
-        //     //     Colors.white.withOpacity(0.7), BlendMode.dstATop),
-        //     image: AssetImage('images/fundo_app.png'),
-        //     fit: BoxFit.fill,
-        //   ),
-        // ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Text("Login"),
-              TextField(
-                decoration: InputDecoration(labelText: "Usuario"),
-                controller: _usuarioCtrl,
-              ),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(labelText: "Senha"),
-                controller: _senhaTxtCtrl,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                child: ElevatedButton(
-                  onPressed: _loading
-                      ? null
-                      : () async {
-                          setState(() {
-                            _loading = true;
-                          });
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text("Login"),
+            TextField(
+              decoration: const InputDecoration(labelText: "Usuario"),
+              controller: _usuarioCtrl,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+            ),
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(labelText: "Senha"),
+              controller: _senhaTxtCtrl,
+              keyboardType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.done,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              child: ElevatedButton(
+                onPressed: _loading
+                    ? null
+                    : () async {
+                        setState(() {
+                          _loading = true;
+                        });
 
-                          try {
-                            if (await _loginControler.validarLogin(_usuarioCtrl.text, _senhaTxtCtrl.text)) {
-                              Modular.to.pushReplacementNamed("/Documentos");
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text("Usuário/Senha Inválido")));
-                            }
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                          } finally {
-                            setState(() {
-                              _loading = false;
-                            });
+                        try {
+                          if (await _loginControler.validarLogin(_usuarioCtrl.text, _senhaTxtCtrl.text)) {
+                            Modular.to.pushReplacementNamed("/SelecaoPerfil");
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text("Usuário/Senha Inválido")));
                           }
-                        },
-                  child: _loading == false
-                      ? Text("Login")
-                      : CircularProgressIndicator(
-                          backgroundColor: Colors.amber,
-                          strokeWidth: 3.0,
-                        ),
-                ),
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                        } finally {
+                          setState(() {
+                            _loading = false;
+                          });
+                        }
+                      },
+                child: _loading == false
+                    ? const Text("Login")
+                    : const CircularProgressIndicator(
+                        backgroundColor: Colors.amber,
+                        strokeWidth: 3.0,
+                      ),
               ),
-              InkWell(
-                child: Text(
-                  'Criar Novo Usuário',
-                  style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
-                ),
-                onTap: () {
-                  Modular.to.pushNamed(
-                    '/CadUsuario',
-                  );
-                },
+            ),
+            InkWell(
+              child: const Text(
+                'Criar Novo Usuário',
+                style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
               ),
-            ],
-          ),
+              onTap: () {
+                Modular.to.pushNamed(
+                  '/CadUsuario',
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

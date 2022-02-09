@@ -9,6 +9,7 @@ class Constantes {
 class ConstsSharedPreferences {
   static const usuarioAuth = "usuarioAuth";
   static const versao = "versao";
+  static const perfil = 'perfil-id';
 }
 
 class Criptografia {

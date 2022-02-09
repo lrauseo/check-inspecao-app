@@ -52,12 +52,12 @@ class _UsuarioPageState extends State<UsuarioPage> {
                         usuarioModel = UsuarioModel();
                       }
                       //usuarioModel.empresa = EmpresaModel(cnpj: widget._ctrlCnpj.text);
-                      usuarioModel.login = widget._ctrlLogin.text;
+                      usuarioModel.email = widget._ctrlLogin.text;
                       usuarioModel.senha = widget._ctrlSenha.text;
                       usuarioModel.nome = widget._ctrlNome.text;
                       widget._controller.setUsuario(usuarioModel);
                       try {
-                        if (await widget._controller.salvarUsuario()) {
+                        if (await widget._controller.criarUsuario()) {
                           setState(() {
                             widget._isBusy = false;
                           });
@@ -90,18 +90,6 @@ class _UsuarioPageState extends State<UsuarioPage> {
                       maxRadius: 60.0,
                     )),
                   ),
-                  // TextFormField(
-                  //   decoration: InputDecoration(labelText: "CNPJ Empresa"),
-                  //   maxLength: 14,
-                  //   // The validator receives the text that the user has entered.
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Informa o CNPJ da Empresa';
-                  //     }
-                  //     return null;
-                  //   },
-                  //   controller: widget._ctrlCnpj,
-                  // ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: TextFormField(
@@ -119,6 +107,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: TextFormField(
+                      controller: widget._ctrlLogin,
                       decoration: InputDecoration(labelText: "E-Mail"),
                       // The validator receives the text that the user has entered.
                       validator: (value) {
@@ -139,22 +128,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                   //     return null;
                   //   },
                   // ),
-                  Divider(),
-                  Text('Dados de Login'),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: TextFormField(
-                      decoration: InputDecoration(labelText: "Login"),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Informe o Login';
-                        }
-                        return null;
-                      },
-                      controller: widget._ctrlLogin,
-                    ),
-                  ),
+
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: TextFormField(

@@ -28,9 +28,8 @@ mixin _$HomeController on _HomeControllerBase, Store {
       AsyncAction('_HomeControllerBase.novoDocumento');
 
   @override
-  Future novoDocumento(int usuarioId, int clienteId) {
-    return _$novoDocumentoAsyncAction
-        .run(() => super.novoDocumento(usuarioId, clienteId));
+  Future novoDocumento(int clienteId) {
+    return _$novoDocumentoAsyncAction.run(() => super.novoDocumento(clienteId));
   }
 
   @override

@@ -10,14 +10,14 @@ class UsuarioAuthModel {
   UsuarioAuthModel.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     validadeToken = json['validadeToken'];
-    usuario = json['usuario'] != null ? new UsuarioModel.fromJson(json['usuario']) : null;
+    usuario = json['usuario'] != null ? UsuarioModel.fromJson(json['usuario']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['token'] = this.token;
     data['validadeToken'] = this.validadeToken;
-    if (this.usuario != null) {
+    if (usuario != null) {
       data['usuario'] = this.usuario!.toJson();
     }
     return data;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:check_inspecao_app/app/custom_exceptions/login_exception.dart';
 import 'package:check_inspecao_app/app/models/usuario_auth_model.dart';
 import 'package:check_inspecao_app/app/modules/usuario/usuario_controller.dart';
@@ -21,7 +23,7 @@ abstract class _LoginControllerBase with Store {
       UsuarioAuthModel usuarioAuth = await service.validarLogin(usuario, senha);
       if (usuarioAuth != null) {
         var prefs = await SharedPreferences.getInstance();
-        prefs.setString(ConstsSharedPreferences.usuarioAuth, usuarioAuth.toJson().toString());
+        prefs.setString(ConstsSharedPreferences.usuarioAuth, jsonEncode(usuarioAuth.toJson()));
       }
       return usuarioAuth != null;
     } on LoginException {

@@ -1,5 +1,7 @@
+import 'package:check_inspecao_app/constantes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuDrawerPrincipal extends StatelessWidget {
   // String title;
@@ -34,7 +36,13 @@ class MenuDrawerPrincipal extends StatelessWidget {
         ListTile(
             title: Text('Logout'),
             leading: Icon(Icons.logout),
-            onTap: () => Modular.to.pushReplacementNamed('/')),
+            onTap: () {
+              SharedPreferences.getInstance().then((value) {
+                value.remove(ConstsSharedPreferences.perfil);
+                value.remove(ConstsSharedPreferences.usuarioAuth);
+                Modular.to.pushReplacementNamed('/');
+              });
+            }),
         // popUntil(ModalRoute.withName("/"))),
       ],
     ));

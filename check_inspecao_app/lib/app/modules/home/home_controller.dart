@@ -20,8 +20,8 @@ abstract class _HomeControllerBase with Store {
   @observable
   DocumentoModel? documentoAtual;
   @action
-  novoDocumento(int usuarioId, int clienteId) async {
-    documentoAtual = await _service.novoDocumento(usuarioId, clienteId);
+  novoDocumento(int clienteId) async {
+    documentoAtual = await _service.novoDocumento(clienteId);
     Modular.to.pushNamed("/Grupos");
   }
 

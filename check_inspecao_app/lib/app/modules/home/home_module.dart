@@ -4,6 +4,8 @@ import 'package:check_inspecao_app/app/modules/itemInspecao/item_inspecao_contro
 import 'package:check_inspecao_app/app/modules/itemInspecao/item_inspecao_page.dart';
 import 'package:check_inspecao_app/app/modules/login/login_controller.dart';
 import 'package:check_inspecao_app/app/modules/login/login_page.dart';
+import 'package:check_inspecao_app/app/modules/perfil_usuario/perfil_controller.dart';
+import 'package:check_inspecao_app/app/modules/perfil_usuario/selecao_perfil_usuario_page.dart';
 import 'package:check_inspecao_app/app/modules/usuario/usuario_controller.dart';
 import 'package:check_inspecao_app/app/modules/usuario/usuario_page.dart';
 import 'package:check_inspecao_app/app/services/check_inspecao_service.dart';
@@ -25,6 +27,7 @@ class HomeModule extends Module {
     //Bind((inject) => DocumentosController()),
     Bind((inject) => ItemInspecaoController()),
     Bind((inject) => UsuarioController()),
+    Bind((inject) => PerfilController()),
   ];
 
   @override
@@ -43,5 +46,6 @@ class HomeModule extends Module {
     }),
     ChildRoute('/Assinatura', child: (_, args) => const SignatureDraw()),
     ChildRoute('/CadUsuario', child: (_, args) => UsuarioPage()),
+    ChildRoute('/SelecaoPerfil', child: (_, args) => const SelecaoPerfilUsuarioPage()),
   ];
 }

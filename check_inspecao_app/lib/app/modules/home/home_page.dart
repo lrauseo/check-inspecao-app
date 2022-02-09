@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
               icon: const Icon(Icons.add_box),
               onPressed: () async {
-                await _controller.novoDocumento(1, 1);
+                await _controller.novoDocumento(1);
               }),
         ],
       ),

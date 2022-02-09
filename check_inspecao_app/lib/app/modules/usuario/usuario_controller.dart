@@ -28,4 +28,14 @@ abstract class _UsuarioControllerBase with Store {
       throw e;
     }
   }
+
+  Future<bool> criarUsuario() async {
+    try {
+      if (this.usuario == null) return false;
+      UsuarioModel usuarioModel = await service.criarUsuario(usuario!);
+      return usuarioModel != null;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
