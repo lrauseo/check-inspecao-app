@@ -11,8 +11,8 @@ class PerfilUsuarioModel {
 
   PerfilUsuarioModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    usuario = UsuarioModel.fromJson(json['usuario']);
-    empresa = json['empresa'];
+    if (json['usuario'] != null) usuario = UsuarioModel.fromJson(json['usuario']);
+    if (json['empresa'] != null) empresa = EmpresaModel.fromJson(json['empresa']);
     isInativo = json['isInativo'];
   }
 

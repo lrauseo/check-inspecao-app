@@ -4,17 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class SelecaoPerfilUsuarioPage extends StatelessWidget {
+class SelecaoPerfilUsuarioPage extends StatefulWidget {
   const SelecaoPerfilUsuarioPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var controller = Modular.get<PerfilController>();
+  State<SelecaoPerfilUsuarioPage> createState() => _SelecaoPerfilUsuarioPageState();
+}
 
+class _SelecaoPerfilUsuarioPageState extends ModularState<SelecaoPerfilUsuarioPage, PerfilController> {
+  @override
+  Widget build(BuildContext context) {
+    controller.buscarPerfis();
     return Scaffold(
       appBar: AppBar(title: const Text('Selecionar o perfil')),
       body: Observer(builder: (_) {
-        controller.buscarPerfis();
         return ListView.separated(
             itemBuilder: (context, idx) {
               var dados = controller.perfis.toList();

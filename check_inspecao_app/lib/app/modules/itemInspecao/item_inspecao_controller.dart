@@ -22,9 +22,10 @@ abstract class _ItemInspecaoControllerBase with Store {
   @observable
   ItemDocumentoModel? itemSelecionado;
 
-  Future<List<ItemDocumentoModel>> listaItens(int grupoId) async {
+  Future<List<ItemDocumentoModel>> listaItens(int? grupoId) async {
     try {
-      var itens = await _service.listaItensInspecao(grupoId);
+      if (grupoId == null && documentoAtual != null) return documentoAtual!.itens!.asObservable();
+      var itens = await _service.listaItensInspecao(grupoId!);
       if (documentoAtual?.itens?.length == 0) {
         criaItemDocumento(itens);
       } else {

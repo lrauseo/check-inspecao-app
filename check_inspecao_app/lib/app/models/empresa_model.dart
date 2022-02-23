@@ -1,5 +1,5 @@
 class EmpresaModel {
-  String? id;
+  int? id;
   String? razaosocial;
   String? cnpj;
   String? endereco;

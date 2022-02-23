@@ -22,7 +22,11 @@ abstract class _HomeControllerBase with Store {
   @action
   novoDocumento(int clienteId) async {
     documentoAtual = await _service.novoDocumento(clienteId);
-    Modular.to.pushNamed("/Grupos");
+    var grupoSelecionado = await Modular.to.pushNamed<int?>("/Grupos");
+    bool voltaDocumentos = await Modular.to.pushNamed("/ItemInspecao/$grupoSelecionado") ?? false;
+    if (voltaDocumentos) {
+      Modular.to.pop(voltaDocumentos);
+    }
   }
 
   salvarDocumento(List<ItemDocumentoModel> itens) async {

@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CheckInspecaoService {
   late SharedPreferences _preferences;
   late UsuarioAuthModel _usuarioAuth;
-  late int _perfilId;
+  int? _perfilId;
   CheckInspecaoService() {
     SharedPreferences.getInstance().then((value) {
       _preferences = value;
@@ -24,7 +24,7 @@ class CheckInspecaoService {
       if (usuarioAuthJson != null) {
         Map<String, dynamic> json = jsonDecode(usuarioAuthJson);
         _usuarioAuth = UsuarioAuthModel.fromJson(json);
-        _perfilId = _preferences.getInt(ConstsSharedPreferences.perfil)!;
+        _perfilId = _preferences.getInt(ConstsSharedPreferences.perfil);
       }
     });
   }
@@ -139,8 +139,10 @@ class CheckInspecaoService {
       var url = Uri.http(Constantes.baseUrl, _salvarDocumento);
       // print(documentoAtual.toJson().toString());
       var param = jsonEncode(documentoAtual.toJson(true));
-      var response =
-          await http.post(url, body: param, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+      var response = await http.post(url, body: param, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer ${_usuarioAuth.token}'
+      });
       if (response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
         print("Documento Salvo...");
@@ -209,7 +211,10 @@ class CheckInspecaoService {
     const String _documentoById = "/Documento/GetDocumentoById/";
     try {
       var url = Uri.http(Constantes.baseUrl, _documentoById, {'documentoId': documentoId.toString()});
-      var response = await http.get(url);
+      var response = await http.get(url, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer ${_usuarioAuth.token}'
+      });
       if (response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
         print("Busca documento...");
@@ -257,9 +262,9 @@ class CheckInspecaoService {
         Iterable json = jsonDecode(response.body);
         print("Busca de perfis...");
         var itens = <PerfilUsuarioModel>[];
-        json.forEach((v) {
+        for (var v in json) {
           itens.add(PerfilUsuarioModel.fromJson(v));
-        });
+        }
         return itens;
       } else {
         return <PerfilUsuarioModel>[];

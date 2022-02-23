@@ -29,10 +29,10 @@ class FotoModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    // data['arquivo'] = base64.encode(this.arquivo);
-    data['arquivo'] = this.arquivo;
-    if (this.itemDocumento != null) {
-      data['itemInspecao'] = this.itemDocumento!.toJson(false);
+    if (arquivo != null) data['arquivo'] = base64.encode(arquivo!);
+    //data['arquivo'] =  arquivo.toList();
+    if (itemDocumento != null) {
+      data['itemInspecao'] = itemDocumento!.toJson(false);
     }
     return data;
   }

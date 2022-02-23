@@ -25,7 +25,7 @@ class GrupoPage extends StatelessWidget {
                     itemBuilder: (_, idx) {
                       return ListTile(
                           title: Text(grupos[idx].descricao ?? ''),
-                          onTap: () => _controller.goToItensInspecao(grupos[idx]));
+                          onTap: () => Modular.to.pop<int?>(grupos[idx].id));
                     });
               }
             }));
