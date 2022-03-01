@@ -9,18 +9,12 @@ part of 'perfil_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PerfilController on _PerfilControllerBase, Store {
-  final _$_PerfilControllerBaseActionController =
-      ActionController(name: '_PerfilControllerBase');
+  final _$buscarPerfisAsyncAction =
+      AsyncAction('_PerfilControllerBase.buscarPerfis');
 
   @override
-  dynamic buscarPerfis() {
-    final _$actionInfo = _$_PerfilControllerBaseActionController.startAction(
-        name: '_PerfilControllerBase.buscarPerfis');
-    try {
-      return super.buscarPerfis();
-    } finally {
-      _$_PerfilControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future buscarPerfis() {
+    return _$buscarPerfisAsyncAction.run(() => super.buscarPerfis());
   }
 
   @override

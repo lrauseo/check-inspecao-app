@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:check_inspecao_app/app/models/documento_model.dart';
 import 'package:check_inspecao_app/app/models/item_documento_model.dart';
+import 'package:check_inspecao_app/app/models/store_base.dart';
 import 'package:check_inspecao_app/app/models/usuario_auth_model.dart';
 import 'package:check_inspecao_app/constantes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -14,7 +15,7 @@ part 'home_controller.g.dart';
 
 class HomeController = _HomeControllerBase with _$HomeController;
 
-abstract class _HomeControllerBase with Store {
+abstract class _HomeControllerBase extends StoreBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
 
   @observable

@@ -1,4 +1,5 @@
 import 'package:check_inspecao_app/app/models/grupo_model.dart';
+import 'package:check_inspecao_app/app/models/store_base.dart';
 import 'package:check_inspecao_app/app/services/check_inspecao_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -9,7 +10,7 @@ part 'grupo_controller.g.dart';
 
 class GrupoController = _GrupoControllerBase with _$GrupoController;
 
-abstract class _GrupoControllerBase with Store {
+abstract class _GrupoControllerBase extends StoreBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
 
   @observable

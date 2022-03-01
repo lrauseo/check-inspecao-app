@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:check_inspecao_app/app/modules/login/login_controller.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:mobx/mobx.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,19 +16,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _usuarioCtrl = TextEditingController();
-
-  final _senhaTxtCtrl = TextEditingController();
-
   final _loginControler = Modular.get<LoginController>();
-
-  bool _loading = false;
+  List<ReactionDisposer> disposers = [];
+  void initState() {
+    disposers = [
+      reaction((_) => _loginControler.exceptionApp, (_) {
+        if (_loginControler.exceptionApp != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(_loginControler.exceptionApp!.message!),
+            backgroundColor: Colors.red,
+          ));
+        }
+      })
+    ];
+    super.initState();
+  }
 
   @override
   void dispose() {
-    _usuarioCtrl.dispose();
-
-    _senhaTxtCtrl.dispose();
+    for (var element in disposers) {
+      element();
+    }
+    Modular.dispose<LoginController>();
     super.dispose();
   }
 
@@ -44,49 +56,34 @@ class _LoginPageState extends State<LoginPage> {
             // Text("Login"),
             TextField(
               decoration: const InputDecoration(labelText: "Usuario"),
-              controller: _usuarioCtrl,
+              controller: _loginControler.usuarioCtrl,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
             ),
             TextField(
               obscureText: true,
               decoration: const InputDecoration(labelText: "Senha"),
-              controller: _senhaTxtCtrl,
+              controller: _loginControler.senhaTxtCtrl,
               keyboardType: TextInputType.visiblePassword,
               textInputAction: TextInputAction.done,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2,
-              child: ElevatedButton(
-                onPressed: _loading
-                    ? null
-                    : () async {
-                        setState(() {
-                          _loading = true;
-                        });
-
-                        try {
-                          if (await _loginControler.validarLogin(_usuarioCtrl.text, _senhaTxtCtrl.text)) {
-                            Modular.to.pushReplacementNamed("/SelecaoPerfil");
-                          } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text("Usuário/Senha Inválido")));
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                        } finally {
-                          setState(() {
-                            _loading = false;
-                          });
-                        }
-                      },
-                child: _loading == false
-                    ? const Text("Login")
-                    : const CircularProgressIndicator(
-                        backgroundColor: Colors.amber,
-                        strokeWidth: 3.0,
-                      ),
-              ),
+              child: Observer(builder: (_) {
+                _loginControler.loading ? context.loaderOverlay.show() : context.loaderOverlay.hide();
+                return ElevatedButton(
+                  onPressed: () async {
+                    if (await _loginControler.validarLogin()) {
+                      Modular.to.pushReplacementNamed("/SelecaoPerfil");
+                    }
+                    // } else {
+                    //   ScaffoldMessenger.of(context)
+                    //       .showSnackBar(SnackBar(content: Text("Usuário/Senha Inválido")));
+                    // }
+                  },
+                  child: const Text('Login'),
+                );
+              }),
             ),
             InkWell(
               child: const Text(

@@ -13,9 +13,8 @@ mixin _$LoginController on _LoginControllerBase, Store {
       AsyncAction('_LoginControllerBase.validarLogin');
 
   @override
-  Future<bool> validarLogin(String usuario, String senha) {
-    return _$validarLoginAsyncAction
-        .run(() => super.validarLogin(usuario, senha));
+  Future<bool> validarLogin() {
+    return _$validarLoginAsyncAction.run(() => super.validarLogin());
   }
 
   @override

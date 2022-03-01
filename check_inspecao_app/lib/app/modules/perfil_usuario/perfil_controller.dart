@@ -1,4 +1,5 @@
 import 'package:check_inspecao_app/app/models/perfil_usuario_model.dart';
+import 'package:check_inspecao_app/app/models/store_base.dart';
 import 'package:check_inspecao_app/app/services/check_inspecao_service.dart';
 import 'package:check_inspecao_app/constantes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -8,21 +9,19 @@ part 'perfil_controller.g.dart';
 
 class PerfilController = _PerfilControllerBase with _$PerfilController;
 
-abstract class _PerfilControllerBase with Store {
+abstract class _PerfilControllerBase extends StoreBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
 
   ObservableList<PerfilUsuarioModel> perfis = ObservableList<PerfilUsuarioModel>();
 
   @action
-  buscarPerfis() {
+  buscarPerfis() async {
     List<PerfilUsuarioModel> listaPerfil;
-    _service.getPerfis().then((value) {
-      listaPerfil = value;
-      perfis.clear();
-      for (var e in listaPerfil) {
-        perfis.add(e);
-      }
-    });
+    listaPerfil = await _service.getPerfis();
+    perfis.clear();
+    for (var e in listaPerfil) {
+      perfis.add(e);
+    }
   }
 
   goToHome(int perfilId) {

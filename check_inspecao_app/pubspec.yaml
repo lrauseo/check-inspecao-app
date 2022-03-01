@@ -47,6 +47,8 @@ dependencies:
   intl: ^0.17.0
   encrypt: 
   jwt_decoder: 
+  loader_overlay:
+  flutter_spinkit:
 
 dev_dependencies:
   flutter_test:
