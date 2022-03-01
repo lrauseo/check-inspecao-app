@@ -51,11 +51,11 @@ class ItemInspecaoModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['id'] = id ?? 0;
     if (this.grupo != null) {
       data['grupo'] = this.grupo!.toJson();
     }
-    data['classificacao'] = this._classificacao;
+    data['classificacao'] = _classificacao?.substring(0, 1).toUpperCase();
     data['descricao'] = this.descricao;
     data['sim'] = this.sim;
     data['nao'] = this.nao;

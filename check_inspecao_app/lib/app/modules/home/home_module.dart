@@ -1,5 +1,6 @@
+import 'package:check_inspecao_app/app/modules/grupo/grupo_alteracao_page.dart';
 import 'package:check_inspecao_app/app/modules/grupo/grupo_controller.dart';
-import 'package:check_inspecao_app/app/modules/grupo/grupo_page.dart';
+import 'package:check_inspecao_app/app/modules/grupo/grupo_busca_page.dart';
 import 'package:check_inspecao_app/app/modules/itemInspecao/item_inspecao_controller.dart';
 import 'package:check_inspecao_app/app/modules/itemInspecao/item_inspecao_page.dart';
 import 'package:check_inspecao_app/app/modules/login/login_controller.dart';
@@ -23,7 +24,6 @@ class HomeModule extends Module {
     Bind.lazySingleton((i) => HomeController()),
     Bind((inject) => CheckInspecaoService()),
     Bind((inject) => LoginController()),
-    Bind((inject) => GrupoController()),
     //Bind((inject) => DocumentosController()),
     Bind((inject) => ItemInspecaoController()),
     Bind((inject) => UsuarioController()),
@@ -35,7 +35,7 @@ class HomeModule extends Module {
     ChildRoute(Modular.initialRoute, child: (_, args) => LoginPage()),
     //ChildRoute('/', child: (_, args) => LoginPage()),
     ChildRoute('/Documentos', child: (_, args) => HomePage()),
-    ChildRoute('/Grupos', child: (_, args) => GrupoPage()),
+
     //ChildRoute('/Perfil', child: (_, args) => PerfilUsuarioPage()),
     ChildRoute('/ItemInspecao/:grupoId',
         child: (_, args) => ItemInspecaoPage(int.parse(args.params['grupoId']))),

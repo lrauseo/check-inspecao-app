@@ -112,6 +112,29 @@ class CheckInspecaoService {
     }
   }
 
+  Future<GrupoModel?> salvarGrupo(GrupoModel grupo) async {
+    const String _grupo = "/Grupo/";
+    try {
+      var param = jsonEncode(grupo.toJson());
+      var url = Uri.http(Constantes.baseUrl, _grupo);
+      var response = await http.post(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization': 'Bearer ${_usuarioAuth.token}'
+        },
+        body: param,
+      );
+      if (response.statusCode == 200) {
+        return GrupoModel.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
   listaItensInspecao(int grupoId) async {
     const String _itemInspecao = "/Grupo/BuscaItensInspecao/";
     try {
@@ -268,6 +291,29 @@ class CheckInspecaoService {
         return itens;
       } else {
         return <PerfilUsuarioModel>[];
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<ItemInspecaoModel?> salvarSubGrupo(ItemInspecaoModel itemInspecao) async {
+    const String _subgrupo = "/Grupo/SalvarItensInspecao/";
+    try {
+      var param = jsonEncode(itemInspecao.toJson());
+      var url = Uri.http(Constantes.baseUrl, _subgrupo);
+      var response = await http.post(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization': 'Bearer ${_usuarioAuth.token}'
+        },
+        body: param,
+      );
+      if (response.statusCode == 200) {
+        return ItemInspecaoModel.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
       }
     } catch (e) {
       throw e;

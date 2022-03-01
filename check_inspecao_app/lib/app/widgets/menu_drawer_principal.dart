@@ -28,14 +28,21 @@ class MenuDrawerPrincipal extends StatelessWidget {
           leading: Icon(Icons.person),
           onTap: () => Modular.to.pushNamed('/Perfil'),
         ),
+        ListTile(
+          title: const Text('Categorias'),
+          leading: const Icon(Icons.person),
+          onTap: () => Modular.to.pushNamed(
+            '/Grupos/true',
+          ),
+        ),
         // ListTile(
         //   title: Text('Assinatura'),
         //   leading: Icon(Icons.person),
         //   onTap: () => Modular.to.pushNamed('/Assinatura'),
         // ),
         ListTile(
-            title: Text('Logout'),
-            leading: Icon(Icons.logout),
+            title: const Text('Logout'),
+            leading: const Icon(Icons.logout),
             onTap: () {
               SharedPreferences.getInstance().then((value) {
                 value.remove(ConstsSharedPreferences.perfil);

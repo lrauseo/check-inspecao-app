@@ -28,7 +28,7 @@ mixin _$GrupoController on _GrupoControllerBase, Store {
       AsyncAction('_GrupoControllerBase.listaGrupos');
 
   @override
-  Future<List<GrupoModel>?> listaGrupos() {
+  Future listaGrupos() {
     return _$listaGruposAsyncAction.run(() => super.listaGrupos());
   }
 
@@ -39,6 +39,21 @@ mixin _$GrupoController on _GrupoControllerBase, Store {
   Future goToItensInspecao(GrupoModel grupo) {
     return _$goToItensInspecaoAsyncAction
         .run(() => super.goToItensInspecao(grupo));
+  }
+
+  final _$salvarGrupoAsyncAction =
+      AsyncAction('_GrupoControllerBase.salvarGrupo');
+
+  @override
+  Future<GrupoModel?> salvarGrupo() {
+    return _$salvarGrupoAsyncAction.run(() => super.salvarGrupo());
+  }
+
+  final _$novoGrupoAsyncAction = AsyncAction('_GrupoControllerBase.novoGrupo');
+
+  @override
+  Future novoGrupo() {
+    return _$novoGrupoAsyncAction.run(() => super.novoGrupo());
   }
 
   @override
