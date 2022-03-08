@@ -35,6 +35,13 @@ class MenuDrawerPrincipal extends StatelessWidget {
             '/Grupos/true',
           ),
         ),
+        ListTile(
+          title: const Text('Questionarios'),
+          leading: const Icon(Icons.person),
+          onTap: () => Modular.to.pushNamed(
+            '/Questionarios/',
+          ),
+        ),
         // ListTile(
         //   title: Text('Assinatura'),
         //   leading: Icon(Icons.person),

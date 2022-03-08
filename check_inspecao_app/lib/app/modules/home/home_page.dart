@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () async {
                       _controller.documentoAtual =
                           await _controller.getDocumentoById(snapshot.data![index].id ?? 0);
-                      await Modular.to.pushNamed("/ItemInspecao/");
+                      await Modular.to.pushNamed("/ItemInspecao");
                       setState(() {});
                     },
                   );

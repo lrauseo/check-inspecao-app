@@ -7,7 +7,7 @@ import 'grupo_controller.dart';
 class GrupoModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind((inject) => GrupoController()),
+    Bind((inject) => GrupoController(), export: true),
   ];
 
   @override

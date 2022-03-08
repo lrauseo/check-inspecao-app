@@ -1,3 +1,4 @@
+import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:check_inspecao_app/app/models/grupo_model.dart';
 import 'package:check_inspecao_app/app/models/store_base.dart';
 import 'package:check_inspecao_app/app/services/check_inspecao_service.dart';
@@ -10,8 +11,14 @@ part 'grupo_controller.g.dart';
 
 class GrupoController = _GrupoControllerBase with _$GrupoController;
 
-abstract class _GrupoControllerBase extends StoreBase with Store {
+abstract class _GrupoControllerBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
 
   @observable
   GrupoModel? grupoAtual;

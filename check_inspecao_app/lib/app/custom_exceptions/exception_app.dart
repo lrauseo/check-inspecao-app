@@ -9,7 +9,7 @@ class ExceptionApp implements Exception {
 
   @override
   String toString() {
-    if (this.message == null) return "Exception";
-    return message!;
+    if (message == null) return "Exception";
+    return '${message!} - [ $details ]';
   }
 }

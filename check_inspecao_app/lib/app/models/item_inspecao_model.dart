@@ -1,6 +1,8 @@
 import 'package:check_inspecao_app/app/models/grupo_model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:mobx/mobx.dart';
 
-class ItemInspecaoModel {
+class ItemInspecaoModel extends Equatable {
   int? id;
   GrupoModel? grupo;
   String? _classificacao;
@@ -63,4 +65,8 @@ class ItemInspecaoModel {
     data['naoObservado'] = this.naoObservado;
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id, grupo, classificacao, descricao, sim, nao, naoSeAplica, naoObservado];
 }

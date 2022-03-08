@@ -1,9 +1,9 @@
 enum Httptype { http, https }
 
 class Constantes {
-  //static const baseUrl = "checkinspecao-api-desenv.azurewebsites.net";
-  static const baseUrl = "192.168.0.6:5002";
-  static const Httptype httpType = Httptype.http;
+  static const baseUrl = "checkinspecao-api-desenv.azurewebsites.net";
+  //static const baseUrl = "192.168.0.5:5002";
+  static const Httptype httpType = Httptype.https;
 }
 
 class ConstsSharedPreferences {

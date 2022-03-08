@@ -50,6 +50,10 @@ dependencies:
   loader_overlay:
   flutter_spinkit:
 
+  equatable:
+  grouped_list:
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

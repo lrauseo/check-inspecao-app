@@ -7,7 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 class SubGruposModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.lazySingleton((i) => SubGruposController()),
+    Bind.lazySingleton((i) => SubGruposController(), export: true),
   ];
 
   @override

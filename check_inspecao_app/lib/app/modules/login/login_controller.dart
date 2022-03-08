@@ -16,13 +16,20 @@ part 'login_controller.g.dart';
 
 class LoginController = _LoginControllerBase with _$LoginController;
 
-abstract class _LoginControllerBase extends StoreBase with Store {
+abstract class _LoginControllerBase with Store {
   final service = Modular.get<CheckInspecaoService>();
   final _usuarioController = Modular.get<UsuarioController>();
 
   final usuarioCtrl = TextEditingController();
 
   final senhaTxtCtrl = TextEditingController();
+
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
 
   @action
   Future<bool> validarLogin() async {
@@ -31,6 +38,7 @@ abstract class _LoginControllerBase extends StoreBase with Store {
       UsuarioAuthModel usuarioAuth = await service.validarLogin(usuarioCtrl.text, senhaTxtCtrl.text);
       if (usuarioAuth != null) {
         var prefs = await SharedPreferences.getInstance();
+        await prefs.remove(ConstsSharedPreferences.usuarioAuth);
         prefs.setString(ConstsSharedPreferences.usuarioAuth, jsonEncode(usuarioAuth.toJson()));
       }
       setLoading(false);

@@ -10,11 +10,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class ItemInspecaoPage extends StatefulWidget {
-  final int _grupoId;
+  late int? formularioId;
 
-  const ItemInspecaoPage(this._grupoId, {Key? key}) : super(key: key);
+  ItemInspecaoPage({this.formularioId, Key? key}) : super(key: key);
 
   @override
   _ItemInspecaoPageState createState() => _ItemInspecaoPageState();
@@ -29,197 +30,182 @@ class _ItemInspecaoPageState extends State<ItemInspecaoPage> {
   @override
   void dispose() {
     _txtControlerObs.dispose();
+    Modular.dispose<ItemInspecaoController>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     _controller.setDocumentoAtual(_documentosController.documentoAtual);
-
+    _controller.listaItens(widget.formularioId);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Item Inspecao"),
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () async {
-                  var erros = _controller.validaItens(_controller.itensDocumento);
-                  // if (erros.length > 0) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //       backgroundColor: Colors.red,
-                  //       content: Text("Existem itens não marcados !")));
-                  //   return;
-                  // }
-                  var doc = await _documentosController.salvarDocumento(_controller.itensDocumento);
+      appBar: AppBar(
+        title: const Text("Item Inspecao"),
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () async {
+                _controller.validaItens();
+                // if (erros.length > 0) {
+                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //       backgroundColor: Colors.red,
+                //       content: Text("Existem itens não marcados !")));
+                //   return;
+                // }
+                var doc = await _documentosController.salvarDocumento();
 
-                  if (doc != null) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text("Itens Salvos com sucesso!")));
-                    _controller.setDocumentoAtual(null);
-                    Modular.to.pop(true);
-                  }
-                }),
-          ],
-        ),
-        body: FutureBuilder<List<ItemDocumentoModel>>(
-            future: _controller.listaItens(widget._grupoId),
-            builder: (_, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (_, idx) {
-                      _txtControlerObs =
-                          TextEditingController(text: _controller.itensDocumento[idx].observacao);
-                      return Column(
+                if (doc != null) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text("Itens Salvos com sucesso!")));
+                  Modular.to.pop(true);
+                }
+              }),
+        ],
+      ),
+      body: Observer(builder: (_) {
+        _controller.loading ? context.loaderOverlay.show() : context.loaderOverlay.hide();
+        return ListView.builder(
+            itemCount: _controller.documentoAtual?.itens!.length,
+            itemBuilder: (_, idx) {
+              _txtControlerObs =
+                  TextEditingController(text: _controller.documentoAtual?.itens![idx].observacao);
+              return Column(
+                children: [
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.all(5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Card(
-                            elevation: 4,
-                            margin: const EdgeInsets.all(5),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 5, right: 5),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue[100],
-                                        borderRadius: const BorderRadius.all(Radius.circular(20))),
-                                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Observer(builder: (_) {
-                                      return Text(
-                                        "Classificação: ${_controller.itensDocumento[idx].itemInspecao?.classificacao}",
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
-                                      );
-                                    }),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(width: 2, color: Colors.blue.shade100))),
-                                    child: Observer(builder: (_) {
-                                      return Text(
-                                          "Descrição: ${_controller.itensDocumento[idx].itemInspecao?.descricao}");
-                                    }),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Observer(builder: (_) {
-                                              return Checkbox(
-                                                  value: _controller.itensDocumento[idx].sim ?? false,
-                                                  onChanged: (checked) {
-                                                    var item = _controller.itensDocumento[idx];
-                                                    _controller.setOpcaoInspecao(item, OpcaoInspecao.sim);
-                                                  });
-                                            }),
-                                            const Text("Sim")
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Observer(builder: (_) {
-                                              return Checkbox(
-                                                  value: _controller.itensDocumento[idx].nao ?? false,
-                                                  onChanged: (checked) {
-                                                    var item = _controller.itensDocumento[idx];
-                                                    _controller.setOpcaoInspecao(item, OpcaoInspecao.nao);
-                                                  });
-                                            }),
-                                            const Text("Não")
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Observer(builder: (_) {
-                                              return Checkbox(
-                                                  value: _controller.itensDocumento[idx].naoSeAplica ?? false,
-                                                  onChanged: (checked) {
-                                                    var item = _controller.itensDocumento[idx];
-                                                    _controller.setOpcaoInspecao(
-                                                        item, OpcaoInspecao.naoSeAplica);
-                                                  });
-                                            }),
-                                            const Text("NA")
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                          child: Row(
-                                        children: [
-                                          Observer(builder: (_) {
-                                            return Checkbox(
-                                                value: _controller.itensDocumento[idx].naoObservado ?? false,
-                                                onChanged: (checked) {
-                                                  var item = _controller.itensDocumento[idx];
-                                                  _controller.setOpcaoInspecao(
-                                                      item, OpcaoInspecao.naoObservado);
-                                                });
-                                          }),
-                                          const Text("NO")
-                                        ],
-                                      )),
-                                    ],
-                                  ),
-                                  TextField(
-                                    controller: _txtControlerObs = TextEditingController(
-                                        text: _controller.itensDocumento[idx].observacao),
-                                    onChanged: (value) {
-                                      _controller.itensDocumento[idx].observacao = value;
-
-                                      // _controller.addItemDocumento(
-                                      //     _controller.itensDocumento[idx]);
-
-                                      this._txtControlerObs.selection = TextSelection.fromPosition(
-                                          TextPosition(offset: _txtControlerObs.text.length));
-                                    },
-
-                                    decoration: const InputDecoration(hintText: "Observação"),
-                                    // controller: _txtObservacaoCtrl,
-                                    textCapitalization: TextCapitalization.characters,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z 0-9]"))
-                                    ],
-                                    // onChanged: (value) =>
-                                    //     controller.setObs(value)
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: SizedBox(
-                                      height: 40.0,
-                                      child: Observer(builder: (_) {
-                                        return ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          children: _listaFotos(
-                                              ElevatedButton(
-                                                  onPressed: () async {
-                                                    await _tirarFoto(_controller.itensDocumento[idx]);
-                                                  },
-                                                  child: const Icon(Icons.add_a_photo)),
-                                              _controller.itensDocumento[idx]),
-                                        );
-                                      }),
-                                    ),
-                                  )
-                                ],
+                          Container(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: const BorderRadius.all(Radius.circular(20))),
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                            width: MediaQuery.of(context).size.width,
+                            child: Observer(builder: (_) {
+                              return Text(
+                                "Classificação: ${_controller.documentoAtual?.itens![idx].itemInspecao?.classificacao}",
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              );
+                            }),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border(bottom: BorderSide(width: 2, color: Colors.blue.shade100))),
+                            child: Observer(builder: (_) {
+                              return Text(
+                                  "Descrição: ${_controller.documentoAtual?.itens![idx].itemInspecao?.descricao}");
+                            }),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Observer(builder: (_) {
+                                  return CheckboxListTile(
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      title: const Text("Sim"),
+                                      contentPadding: EdgeInsets.zero,
+                                      value: _controller.documentoAtual?.itens![idx].sim ?? false,
+                                      onChanged: (checked) {
+                                        var item = _controller.documentoAtual?.itens![idx];
+                                        _controller.setOpcaoInspecao(item!, OpcaoInspecao.sim);
+                                      });
+                                }),
                               ),
+                              Expanded(
+                                child: Observer(builder: (_) {
+                                  return CheckboxListTile(
+                                      title: const Text("Não"),
+                                      contentPadding: EdgeInsets.zero,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      value: _controller.documentoAtual?.itens![idx].nao ?? false,
+                                      onChanged: (checked) {
+                                        var item = _controller.documentoAtual?.itens![idx];
+                                        _controller.setOpcaoInspecao(item!, OpcaoInspecao.nao);
+                                      });
+                                }),
+                              ),
+                              Expanded(
+                                child: Observer(builder: (_) {
+                                  return CheckboxListTile(
+                                      title: const Text("NA"),
+                                      contentPadding: EdgeInsets.zero,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      value: _controller.documentoAtual?.itens![idx].naoSeAplica ?? false,
+                                      onChanged: (checked) {
+                                        var item = _controller.documentoAtual?.itens![idx];
+                                        _controller.setOpcaoInspecao(item!, OpcaoInspecao.naoSeAplica);
+                                      });
+                                }),
+                              ),
+                              Expanded(
+                                child: Observer(builder: (_) {
+                                  return CheckboxListTile(
+                                      title: const Text("NO"),
+                                      contentPadding: EdgeInsets.zero,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      value: _controller.documentoAtual?.itens![idx].naoObservado ?? false,
+                                      onChanged: (checked) {
+                                        var item = _controller.documentoAtual?.itens![idx];
+                                        _controller.setOpcaoInspecao(item!, OpcaoInspecao.naoObservado);
+                                      });
+                                }),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: _txtControlerObs = TextEditingController(
+                                text: _controller.documentoAtual?.itens![idx].observacao ?? ''),
+                            onChanged: (value) {
+                              _controller.documentoAtual?.itens![idx].observacao = value;
+
+                              // _controller.addItemDocumento(
+                              //      _controller.documentoAtual?.itens![idx]);
+
+                              this._txtControlerObs.selection = TextSelection.fromPosition(
+                                  TextPosition(offset: _txtControlerObs.text.length));
+                            },
+
+                            decoration: const InputDecoration(hintText: "Observação"),
+                            // controller: _txtObservacaoCtrl,
+                            textCapitalization: TextCapitalization.characters,
+                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z 0-9]"))],
+                            // onChanged: (value) =>
+                            //     controller.setObs(value)
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: SizedBox(
+                              height: 40.0,
+                              child: Observer(builder: (_) {
+                                return ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: _listaFotos(
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            var item = _controller.documentoAtual?.itens![idx];
+                                            await _tirarFoto(item!);
+                                          },
+                                          child: const Icon(Icons.add_a_photo)),
+                                      _controller.documentoAtual!.itens![idx]),
+                                );
+                              }),
                             ),
                           )
                         ],
-                      );
-                    });
-              }
-            }));
+                      ),
+                    ),
+                  )
+                ],
+              );
+            });
+      }),
+    );
   }
 
   List<Widget> _listaFotos(Widget primeiroItem, ItemDocumentoModel item) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:check_inspecao_app/app/models/documento_model.dart';
 import 'package:check_inspecao_app/app/models/item_documento_model.dart';
 import 'package:check_inspecao_app/app/models/store_base.dart';
@@ -15,23 +16,27 @@ part 'home_controller.g.dart';
 
 class HomeController = _HomeControllerBase with _$HomeController;
 
-abstract class _HomeControllerBase extends StoreBase with Store {
+abstract class _HomeControllerBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
-
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
   @observable
   DocumentoModel? documentoAtual;
   @action
   novoDocumento(int clienteId) async {
     documentoAtual = await _service.novoDocumento(clienteId);
-    var grupoSelecionado = await Modular.to.pushNamed<int?>("/Grupos");
-    bool voltaDocumentos = await Modular.to.pushNamed("/ItemInspecao/$grupoSelecionado") ?? false;
-    if (voltaDocumentos) {
-      Modular.to.pop(voltaDocumentos);
-    }
+    var formularioSelecionado = await Modular.to.pushNamed<int?>("/Questionarios/Buscar");
+    await Modular.to.pushNamed("/ItemInspecao/$formularioSelecionado") ?? false;
+    // if (voltaDocumentos) {
+    //   Modular.to.pop(voltaDocumentos);
+    // }
   }
 
-  salvarDocumento(List<ItemDocumentoModel> itens) async {
-    documentoAtual?.itens = itens;
+  salvarDocumento() async {
     if (documentoAtual != null) {
       DocumentoModel doc = await _service.salvarDocumento(documentoAtual!);
       return doc;

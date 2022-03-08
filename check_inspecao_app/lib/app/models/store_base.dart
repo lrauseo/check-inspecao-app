@@ -1,7 +1,7 @@
 import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:mobx/mobx.dart';
 
-class StoreBase {
+class _StoreBase {
   @observable
   ExceptionApp? exceptionApp;
   @observable

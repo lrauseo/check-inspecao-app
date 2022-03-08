@@ -1,3 +1,4 @@
+import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:check_inspecao_app/app/models/perfil_usuario_model.dart';
 import 'package:check_inspecao_app/app/models/store_base.dart';
 import 'package:check_inspecao_app/app/services/check_inspecao_service.dart';
@@ -9,8 +10,15 @@ part 'perfil_controller.g.dart';
 
 class PerfilController = _PerfilControllerBase with _$PerfilController;
 
-abstract class _PerfilControllerBase extends StoreBase with Store {
+abstract class _PerfilControllerBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
+
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
 
   ObservableList<PerfilUsuarioModel> perfis = ObservableList<PerfilUsuarioModel>();
 

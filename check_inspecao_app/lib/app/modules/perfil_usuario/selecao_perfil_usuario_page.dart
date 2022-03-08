@@ -20,7 +20,7 @@ class _SelecaoPerfilUsuarioPageState extends ModularState<SelecaoPerfilUsuarioPa
       body: Observer(builder: (_) {
         return ListView.separated(
             itemBuilder: (context, idx) {
-              var dados = controller.perfis.toList();
+              var dados = controller.perfis;
               return ListTile(
                 title: Text(dados[idx].empresa?.razaosocial ?? dados[idx].usuario.nome!),
                 subtitle: Text(dados[idx].empresa != null ? 'Funcionário(a)' : 'Autônomo(a)'),

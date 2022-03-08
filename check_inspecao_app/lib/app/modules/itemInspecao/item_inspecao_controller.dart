@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:check_inspecao_app/app/models/documento_model.dart';
 import 'package:check_inspecao_app/app/models/foto_model.dart';
 import 'package:check_inspecao_app/app/models/item_documento_model.dart';
@@ -14,25 +15,32 @@ part 'item_inspecao_controller.g.dart';
 class ItemInspecaoController = _ItemInspecaoControllerBase with _$ItemInspecaoController;
 
 abstract class _ItemInspecaoControllerBase with Store {
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
+
   final _service = Modular.get<CheckInspecaoService>();
-  var itensDocumento = ObservableList<ItemDocumentoModel>();
+
   final _grupoController = Modular.get<GrupoController>();
   @observable
   DocumentoModel? documentoAtual;
-  @observable
-  ItemDocumentoModel? itemSelecionado;
 
-  Future<List<ItemDocumentoModel>> listaItens(int? grupoId) async {
+  @action
+  listaItens(int? formularioId) async {
     try {
-      if (grupoId == null && documentoAtual != null) return documentoAtual!.itens!.asObservable();
-      var itens = await _service.listaItensInspecao(grupoId!);
-      if (documentoAtual?.itens?.length == 0) {
-        criaItemDocumento(itens);
-      } else {
-        itensDocumento = documentoAtual!.itens!.asObservable();
-      }
-      return itensDocumento.toList();
+      if (formularioId == null && documentoAtual != null) return;
+      setLoading(true);
+      var itens = await _service.buscaItemInspecaoByFormulario(formularioId!);
+
+      criaItemDocumento(itens);
+
+      setLoading(false);
+      documentoAtual = documentoAtual;
     } catch (e) {
+      setLoading(false);
       throw e;
     }
   }
@@ -44,30 +52,21 @@ abstract class _ItemInspecaoControllerBase with Store {
 
   @action
   criaItemDocumento(List<ItemInspecaoModel> itens) {
-    // var lista = <ItemDocumentoModel>[];
-    itensDocumento.clear();
-    var itensExibicao =
-        documentoAtual?.itens?.where((i) => i.itemInspecao?.grupo?.id == _grupoController.grupoAtual!.id);
-    if (documentoAtual!.itens!.length > 0 && itensExibicao!.length > 0) {
-      itensExibicao.forEach((element) {
-        element.documento = documentoAtual;
-        itensDocumento.add(element);
-      });
-    } else {
-      itens.forEach((element) {
-        element.grupo = _grupoController.grupoAtual;
-        itensDocumento.add(ItemDocumentoModel(id: 0, itemInspecao: element, documento: documentoAtual));
-      });
-      documentoAtual?.itens = itensDocumento;
+    for (var element in itens) {
+      // element.grupo = _grupoController.grupoAtual;
+      documentoAtual?.itens?.add(ItemDocumentoModel(id: 0, itemInspecao: element, documento: documentoAtual));
     }
+    documentoAtual = documentoAtual;
   }
 
   @action
   addItemDocumento(ItemDocumentoModel item) {
-    var it = itensDocumento.firstWhere((element) => element.itemInspecao!.id == item.itemInspecao!.id);
-    int idx = itensDocumento.indexOf(it);
-    if (it != null) itensDocumento.remove(it);
-    itensDocumento.insert(idx, item);
+    var it =
+        documentoAtual?.itens?.firstWhere((element) => element.itemInspecao!.id == item.itemInspecao!.id);
+    int? idx = documentoAtual?.itens?.indexOf(it!);
+    if (it != null) documentoAtual?.itens?.remove(it);
+    documentoAtual?.itens?.insert(idx!, item);
+    documentoAtual = documentoAtual;
   }
 
   addFoto(ItemDocumentoModel item, Uint8List imageStream) async {
@@ -122,12 +121,16 @@ abstract class _ItemInspecaoControllerBase with Store {
     addItemDocumento(item);
   }
 
-  Map<int, ItemDocumentoModel> validaItens(List<ItemDocumentoModel> itens) {
-    var listaErros = Map<int, ItemDocumentoModel>();
-    for (var item in itens) {
-      if (item.nao != true && item.sim != true && item.naoObservado != true && item.naoSeAplica != true)
-        listaErros[itens.indexOf(item)] = item;
+  validaItens() {
+    if (documentoAtual?.itens == null) return <int, ItemDocumentoModel>{};
+    var listaErros = <int, ItemDocumentoModel>{};
+    for (var item in documentoAtual!.itens!) {
+      if (item.nao != true && item.sim != true && item.naoObservado != true && item.naoSeAplica != true) {
+        listaErros[documentoAtual!.itens!.indexOf(item)] = item;
+      }
     }
-    return listaErros;
+    if (listaErros.isNotEmpty) {
+      exceptionApp = ExceptionApp("Existem itens não marcados !");
+    }
   }
 }

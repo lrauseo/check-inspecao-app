@@ -1,3 +1,4 @@
+import 'package:check_inspecao_app/app/custom_exceptions/exception_app.dart';
 import 'package:check_inspecao_app/app/models/grupo_model.dart';
 import 'package:check_inspecao_app/app/models/item_inspecao_model.dart';
 import 'package:check_inspecao_app/app/models/store_base.dart';
@@ -10,9 +11,14 @@ part 'subGrupos_controller.g.dart';
 
 class SubGruposController = _SubGruposStoreBase with _$SubGruposController;
 
-abstract class _SubGruposStoreBase extends StoreBase with Store {
+abstract class _SubGruposStoreBase with Store {
   final _service = Modular.get<CheckInspecaoService>();
-
+  @observable
+  ExceptionApp? exceptionApp;
+  @observable
+  bool loading = false;
+  @action
+  setLoading(bool value) => loading = value;
   @observable
   var itens = ObservableList<ItemInspecaoModel>();
   GrupoModel? grupo;
