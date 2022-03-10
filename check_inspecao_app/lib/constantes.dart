@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
+
 enum Httptype { http, https }
 
 class Constantes {
-  static const baseUrl = "checkinspecao-api-desenv.azurewebsites.net";
-  //static const baseUrl = "192.168.0.5:5002";
-  static const Httptype httpType = Httptype.https;
+  static const _urlRemote = "checkinspecao-api-desenv.azurewebsites.net";
+  static const _urlLocal = "192.168.0.5:5002";
+  static const baseUrl = kDebugMode ? _urlRemote : _urlRemote;
+  static const Httptype httpType = kDebugMode ? Httptype.https : Httptype.https;
 }
 
 class ConstsSharedPreferences {

@@ -34,13 +34,13 @@ abstract class _LoginControllerBase with Store {
   @action
   Future<bool> validarLogin() async {
     try {
+      final SharedPreferences _prefs = await Modular.getAsync();
       setLoading(true);
       UsuarioAuthModel usuarioAuth = await service.validarLogin(usuarioCtrl.text, senhaTxtCtrl.text);
-      if (usuarioAuth != null) {
-        var prefs = await SharedPreferences.getInstance();
-        await prefs.remove(ConstsSharedPreferences.usuarioAuth);
-        prefs.setString(ConstsSharedPreferences.usuarioAuth, jsonEncode(usuarioAuth.toJson()));
-      }
+      await _prefs.remove(ConstsSharedPreferences.usuarioAuth);
+      _prefs.setString(ConstsSharedPreferences.usuarioAuth, jsonEncode(usuarioAuth.toJson()));
+      await _prefs.reload();
+
       setLoading(false);
       return usuarioAuth != null;
     } on LoginException {

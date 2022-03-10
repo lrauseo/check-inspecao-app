@@ -11,6 +11,8 @@ import 'package:check_inspecao_app/app/models/usuario_auth_model.dart';
 import 'package:check_inspecao_app/app/models/usuario_model.dart';
 import 'package:check_inspecao_app/constantes.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter/foundation.dart' as pkgDebug;
+import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,8 +21,10 @@ class CheckInspecaoService {
   late SharedPreferences _preferences;
   late UsuarioAuthModel _usuarioAuth;
   int? _perfilId;
+
+   
   CheckInspecaoService() {
-    SharedPreferences.getInstance().then((value) {
+    Modular.getAsync<SharedPreferences>().then((value) {
       _preferences = value;
       String? usuarioAuthJson = _preferences.getString(ConstsSharedPreferences.usuarioAuth);
       if (usuarioAuthJson != null) {
@@ -346,6 +350,9 @@ class CheckInspecaoService {
         }
         return itens;
       } else {
+        if (pkgDebug.kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return <PerfilUsuarioModel>[];
       }
     } catch (e) {

@@ -16,6 +16,7 @@ import 'package:check_inspecao_app/app/widgets/camera_preview.dart';
 import 'package:check_inspecao_app/app/widgets/draw.dart';
 import 'package:check_inspecao_app/app/widgets/signature_draw.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home_controller.dart';
 
 import 'home_page.dart';
@@ -30,6 +31,7 @@ class HomeModule extends Module {
     Bind((inject) => ItemInspecaoController()),
     Bind((inject) => UsuarioController()),
     Bind((inject) => PerfilController()),
+    Bind.singleton((inject) async => await SharedPreferences.getInstance())
   ];
   List<Module> get imports => [GrupoModule()];
   @override
