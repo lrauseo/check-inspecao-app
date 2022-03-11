@@ -11,14 +11,16 @@ import 'package:check_inspecao_app/app/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     WidgetsFlutterBinding.ensureInitialized();
+    final _prefs = await SharedPreferences.getInstance();
     // final cameras = await availableCameras();
     // Build our app and trigger a frame.
     await tester.pumpWidget(ModularApp(
-      module: AppModule(),
+      module: AppModule(_prefs),
       child: AppWidget(),
     ));
 

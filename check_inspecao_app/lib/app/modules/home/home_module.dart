@@ -25,7 +25,6 @@ class HomeModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.lazySingleton((i) => HomeController()),
-    Bind((inject) => CheckInspecaoService()),
     Bind((inject) => LoginController()),
     //Bind((inject) => DocumentosController()),
     Bind((inject) => ItemInspecaoController()),

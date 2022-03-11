@@ -37,10 +37,6 @@ abstract class _LoginControllerBase with Store {
       final SharedPreferences _prefs = await Modular.getAsync();
       setLoading(true);
       UsuarioAuthModel usuarioAuth = await service.validarLogin(usuarioCtrl.text, senhaTxtCtrl.text);
-      await _prefs.remove(ConstsSharedPreferences.usuarioAuth);
-      _prefs.setString(ConstsSharedPreferences.usuarioAuth, jsonEncode(usuarioAuth.toJson()));
-      await _prefs.reload();
-
       setLoading(false);
       return usuarioAuth != null;
     } on LoginException {

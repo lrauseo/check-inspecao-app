@@ -10,30 +10,19 @@ import 'package:check_inspecao_app/app/models/questionario_formulario_model.dart
 import 'package:check_inspecao_app/app/models/usuario_auth_model.dart';
 import 'package:check_inspecao_app/app/models/usuario_model.dart';
 import 'package:check_inspecao_app/constantes.dart';
+import 'package:dio/dio.dart';
+import 'package:dio/native_imp.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart' as pkgDebug;
-import 'package:flutter_modular/flutter_modular.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckInspecaoService {
-  late SharedPreferences _preferences;
-  late UsuarioAuthModel _usuarioAuth;
+  late final DioForNative _dio;
+
   int? _perfilId;
 
-   
-  CheckInspecaoService() {
-    Modular.getAsync<SharedPreferences>().then((value) {
-      _preferences = value;
-      String? usuarioAuthJson = _preferences.getString(ConstsSharedPreferences.usuarioAuth);
-      if (usuarioAuthJson != null) {
-        Map<String, dynamic> json = jsonDecode(usuarioAuthJson);
-        _usuarioAuth = UsuarioAuthModel.fromJson(json);
-        _perfilId = _preferences.getInt(ConstsSharedPreferences.perfil);
-      }
-    });
-  }
+  CheckInspecaoService(this._dio);
+
   final String _autenticarUsuario = "/Usuario/AutenticarUsuario/";
   Future<UsuarioAuthModel> validarLogin(String usuario, String senha) async {
     try {
@@ -54,7 +43,7 @@ class CheckInspecaoService {
             Uri.https(Constantes.baseUrl, _autenticarUsuario, {'login': usuario, 'senha': encrypted.base64});
       }
 
-      var response = await http.post(url
+      var response = await _dio.post(url.toString().toString()
           // , headers: {
           //   'content-type': 'application/json',
           //   "Access-Control-Allow-Origin": "*", // Required for CORS support to work
@@ -66,9 +55,8 @@ class CheckInspecaoService {
           // }
           );
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("UsuarioAutenticado...");
-        var usuarioAuth = UsuarioAuthModel.fromJson(json);
+        pkgDebug.debugPrint("UsuarioAutenticado...");
+        var usuarioAuth = UsuarioAuthModel.fromJson(response.data);
         return usuarioAuth;
       } else {
         throw LoginException("Usuario Inválido");
@@ -89,11 +77,10 @@ class CheckInspecaoService {
         url = Uri.https(Constantes.baseUrl, _novoDocumento,
             {'clienteId': clientId.toString(), 'perfilUsuarioId': _perfilId.toString()});
       }
-      var response = await http.post(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.post(url.toString());
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("Novo Documento criado...");
-        var documento = DocumentoModel.fromJson(json);
+        pkgDebug.debugPrint("Novo Documento criado...");
+        var documento = DocumentoModel.fromJson(response.data);
         return documento;
       } else {
         return null;
@@ -113,14 +100,13 @@ class CheckInspecaoService {
         url = Uri.https(Constantes.baseUrl, _grupo);
       }
 
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca grupos...");
+        pkgDebug.debugPrint("Busca grupos...");
         var grupos = <GrupoModel>[];
-        json.forEach((v) {
+        for (var v in response.data) {
           grupos.add(GrupoModel.fromJson(v));
-        });
+        }
         return grupos;
       } else {
         return null;
@@ -141,16 +127,12 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _grupo);
       }
-      var response = await http.post(
-        url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          'Authorization': 'Bearer ${_usuarioAuth.token}'
-        },
-        body: param,
+      var response = await _dio.post(
+        url.toString(),
+        data: param,
       );
       if (response.statusCode == 200) {
-        return GrupoModel.fromJson(jsonDecode(response.body));
+        return GrupoModel.fromJson(response.data);
       } else {
         return null;
       }
@@ -168,14 +150,14 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _itemInspecao, {'grupoId': grupoId.toString()});
       }
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca itens grupos...");
+        pkgDebug.debugPrint("Busca itens grupos...");
         var itens = <ItemInspecaoModel>[];
-        json.forEach((v) {
+        for (var v in response.data) {
           itens.add(ItemInspecaoModel.fromJson(v));
-        });
+        }
+
         return itens;
       } else {
         return null;
@@ -194,16 +176,12 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _salvarDocumento);
       }
-      // print(documentoAtual.toJson().toString());
+      // pkgDebug.debugPrint(documentoAtual.toJson().toString());
       var param = jsonEncode(documentoAtual.toJson(true));
-      var response = await http.post(url, body: param, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'Authorization': 'Bearer ${_usuarioAuth.token}'
-      });
+      var response = await _dio.post(url.toString(), data: param);
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("Documento Salvo...");
-        return DocumentoModel.fromJson(json);
+        pkgDebug.debugPrint("Documento Salvo...");
+        return DocumentoModel.fromJson(response.data);
       } else {
         return null;
       }
@@ -221,18 +199,14 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _salvarUsuario);
       }
-      // print(documentoAtual.toJson().toString());
+      // pkgDebug.debugPrint(documentoAtual.toJson().toString());
       var param = jsonEncode(usuario.toJson());
-      var response = await http.post(url, body: param, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'Authorization': 'Bearer ${_usuarioAuth.token}'
-      });
+      var response = await _dio.post(url.toString(), data: param);
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("Usuario Salvo...");
-        return UsuarioModel.fromJson(json);
+        pkgDebug.debugPrint("Usuario Salvo...");
+        return UsuarioModel.fromJson(response.data);
       } else {
-        throw Exception(response.body);
+        throw Exception(response.statusMessage);
       }
     } catch (e) {
       throw e;
@@ -257,18 +231,14 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _salvarUsuario);
       }
-      // print(documentoAtual.toJson().toString());
+      // pkgDebug.debugPrint(documentoAtual.toJson().toString());
       var param = jsonEncode(usuario.toJson());
-      var response = await http.post(url, body: param, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'Authorization': 'Bearer ${_usuarioAuth.token}'
-      });
+      var response = await _dio.post(url.toString(), data: param);
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("Usuario Salvo...");
-        return UsuarioModel.fromJson(json);
+        pkgDebug.debugPrint("Usuario Salvo...");
+        return UsuarioModel.fromJson(response.data);
       } else {
-        throw Exception(response.body);
+        throw Exception(response.statusMessage);
       }
     } catch (e) {
       throw e;
@@ -284,14 +254,10 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _documentoById, {'documentoId': documentoId.toString()});
       }
-      var response = await http.get(url, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'Authorization': 'Bearer ${_usuarioAuth.token}'
-      });
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print("Busca documento...");
-        return DocumentoModel.fromJson(json);
+        pkgDebug.debugPrint("Busca documento...");
+        return DocumentoModel.fromJson(response.data);
       } else {
         return null;
       }
@@ -314,12 +280,11 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _documentos, {'clienteId': clienteId.toString()});
       }
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca documentos...");
+        pkgDebug.debugPrint("Busca documentos...");
         var itens = <DocumentoModel>[];
-        json.forEach((v) {
+        response.data.forEach((v) {
           itens.add(DocumentoModel.fromJson(v));
         });
         return itens;
@@ -340,18 +305,20 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _documentos);
       }
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(
+        url.toString(),
+        options: Options(contentType: Headers.jsonContentType),
+      );
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca de perfis...");
+        pkgDebug.debugPrint("Busca de perfis...");
         var itens = <PerfilUsuarioModel>[];
-        for (var v in json) {
+        for (var v in response.data!) {
           itens.add(PerfilUsuarioModel.fromJson(v));
         }
         return itens;
       } else {
         if (pkgDebug.kDebugMode) {
-          print(response.reasonPhrase);
+          pkgDebug.debugPrint(response.statusMessage);
         }
         return <PerfilUsuarioModel>[];
       }
@@ -371,16 +338,12 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _subgrupo);
       }
-      var response = await http.post(
-        url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          'Authorization': 'Bearer ${_usuarioAuth.token}'
-        },
-        body: param,
+      var response = await _dio.post(
+        url.toString(),
+        data: param,
       );
       if (response.statusCode == 200) {
-        return ItemInspecaoModel.fromJson(jsonDecode(response.body));
+        return ItemInspecaoModel.fromJson(response.data);
       } else {
         return null;
       }
@@ -398,12 +361,11 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _documentos);
       }
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca de Questionarios...");
+        pkgDebug.debugPrint("Busca de Questionarios...");
         var itens = <QuestionarioFormularioModel>[];
-        for (var v in json) {
+        for (var v in response.data) {
           itens.add(QuestionarioFormularioModel.fromJson(v));
         }
         return itens;
@@ -427,18 +389,14 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _questionario);
       }
-      var response = await http.post(
-        url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          'Authorization': 'Bearer ${_usuarioAuth.token}'
-        },
-        body: param,
+      var response = await _dio.post(
+        url.toString(),
+        data: param,
       );
       if (response.statusCode == HttpStatus.ok) {
-        return QuestionarioFormularioModel.fromJson(jsonDecode(response.body));
+        return QuestionarioFormularioModel.fromJson(response.data);
       } else if (response.statusCode == HttpStatus.badRequest) {
-        throw HttpBadRequestExceptionApp(response.reasonPhrase, details: response.body);
+        throw HttpBadRequestExceptionApp(response.statusMessage, details: response.toString());
       }
     } catch (e) {
       throw e;
@@ -454,14 +412,13 @@ class CheckInspecaoService {
       } else {
         url = Uri.https(Constantes.baseUrl, _itemInspecao, {'formularioId': formularioId.toString()});
       }
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ${_usuarioAuth.token}'});
+      var response = await _dio.get(url.toString());
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        print("Busca itens inspeção por fomulario...");
+        pkgDebug.debugPrint("Busca itens inspeção por fomulario...");
         var itens = <ItemInspecaoModel>[];
-        json.forEach((v) {
+        for (var v in response.data) {
           itens.add(ItemInspecaoModel.fromJson(v));
-        });
+        }
         return itens;
       } else {
         return null;
