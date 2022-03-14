@@ -5,8 +5,8 @@ enum Httptype { http, https }
 class Constantes {
   static const _urlRemote = "checkinspecao-api-desenv.azurewebsites.net";
   static const _urlLocal = "192.168.0.5:5002";
-  static const baseUrl = kDebugMode ? _urlRemote : _urlRemote;
-  static const Httptype httpType = kDebugMode ? Httptype.https : Httptype.https;
+  static const baseUrl = kDebugMode ? _urlLocal : _urlRemote;
+  static const Httptype httpType = kDebugMode ? Httptype.http : Httptype.https;
 }
 
 class ConstsSharedPreferences {
@@ -16,6 +16,8 @@ class ConstsSharedPreferences {
 }
 
 class Criptografia {
-  static const key = "0Aa%%0pVsqh9BAab";
-  static const privateKey = "sqh9BAab0Aa%%0pV";
+  static const key = "criptografia.key";
+  //static const key = "0Aa%%0pVsqh9BAab";
+  //static const privateKey = "sqh9BAab0Aa%%0pV";
+  static const privateKey = "criptografia.privateKey";
 }

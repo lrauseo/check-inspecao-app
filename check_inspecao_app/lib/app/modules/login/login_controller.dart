@@ -38,6 +38,7 @@ abstract class _LoginControllerBase with Store {
       setLoading(true);
       UsuarioAuthModel usuarioAuth = await service.validarLogin(usuarioCtrl.text, senhaTxtCtrl.text);
       setLoading(false);
+
       return usuarioAuth != null;
     } on LoginException {
       exceptionApp = ExceptionApp("Usuario/Senha inválidos");

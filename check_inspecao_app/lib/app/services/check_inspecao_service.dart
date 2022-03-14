@@ -14,6 +14,8 @@ import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart' as pkgDebug;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckInspecaoService {
@@ -28,8 +30,12 @@ class CheckInspecaoService {
     try {
       Uri url;
       Codec<String, String> stringToBase64 = utf8.fuse(base64);
-      String key = stringToBase64.encode(Criptografia.key);
-      String iv = stringToBase64.encode(Criptografia.privateKey);
+      // String key = stringToBase64.encode(const String.fromEnvironment(Criptografia.key));
+      // String iv = stringToBase64.encode(const String.fromEnvironment(Criptografia.privateKey));
+      // String key = stringToBase64.encode(Criptografia.key);
+      // String iv = stringToBase64.encode(Criptografia.privateKey);
+      String key = stringToBase64.encode(dotenv.maybeGet(Criptografia.key) ?? '');
+      String iv = stringToBase64.encode(dotenv.maybeGet(Criptografia.privateKey) ?? '');
 
       final encrypter = Encrypter(AES(Key.fromBase64(key), mode: AESMode.cbc, padding: 'PKCS7'));
 
@@ -69,13 +75,15 @@ class CheckInspecaoService {
   Future<DocumentoModel?> novoDocumento(int clientId) async {
     const String _novoDocumento = "/Documento/NovoDocumento/";
     try {
+      var pref = await Modular.getAsync<SharedPreferences>();
+      var perfilId = pref.getInt(ConstsSharedPreferences.perfil);
       Uri url;
       if (Constantes.httpType == Httptype.http) {
         url = Uri.http(Constantes.baseUrl, _novoDocumento,
-            {'clienteId': clientId.toString(), 'perfilUsuarioId': _perfilId.toString()});
+            {'clienteId': clientId.toString(), 'perfilUsuarioId': perfilId.toString()});
       } else {
         url = Uri.https(Constantes.baseUrl, _novoDocumento,
-            {'clienteId': clientId.toString(), 'perfilUsuarioId': _perfilId.toString()});
+            {'clienteId': clientId.toString(), 'perfilUsuarioId': perfilId.toString()});
       }
       var response = await _dio.post(url.toString());
       if (response.statusCode == 200) {
